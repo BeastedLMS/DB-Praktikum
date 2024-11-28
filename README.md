@@ -12,7 +12,7 @@ Web-Anwendung mit SQLite Datenbank
 - [ ] **Gruppennummer**: Gruppennummer angeben.
 
 ### 3. Projektphasen
-- [ ] **Phase 1**: Konzeptpapier
+- [ ] **Phase 1**: Konzeptpapier  https://uniduede-my.sharepoint.com/:w:/r/personal/sven_heimbach_stud_uni-due_de/_layouts/15/Doc.aspx?sourcedoc=%7BBFFCD01A-4E9A-4DD2-BC43-5B406BC17604%7D&file=Konzeptpapier.docx
   - [ ] Software-Architektur
   - [ ] Datenbankdesign
   - [ ] UI-Mockups
