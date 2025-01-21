@@ -24,36 +24,36 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">Konto anlegen</h5>
-            <form class="row g-3">
+            <form class="row g-3" action="/register" method="post">
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">Vorname</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" name="first_name">
                 </div>
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Name</label>
-                    <input type="text" class="form-control" >
+                    <input type="text" class="form-control" name="last_name">
                 </div>
                 <div class="col-md-6">
                     <label for="inputEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail">
+                    <input type="email" class="form-control" name="email">
                 </div>
                 <div class="col-md-6">
                     <label for="inputPassword" class="form-label">Passwort</label>
-                    <input type="password" class="form-control" id="inputPassword">
+                    <input type="password" class="form-control" name="password">
                 </div>
                 <div class="col-12">
                     <label for="inputAddress" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" id="inputAddress">
+                    <input type="text" class="form-control" name="address">
                 </div>
                 
                 <div class="col-md-6">
                     <label for="inputCity" class="form-label">Stadt</label>
-                    <input type="text" class="form-control" id="inputCity">
+                    <input type="text" class="form-control" name="city">
                 </div>
                 
                 <div class="col-md-2">
                     <label for="inputZip" class="form-label">PLZ</label>
-                    <input type="text" class="form-control" id="inputZip">
+                    <input type="text" class="form-control" name="zip">
                 </div>
                 
                 <div class="col-12">
