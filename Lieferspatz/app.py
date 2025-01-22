@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response
 import sqlite3
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def register():
         connection.commit()
         connection.close()
 
-        return request.form["Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann"]
+        return Response("Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann")
     
 
     
