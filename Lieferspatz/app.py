@@ -59,7 +59,7 @@ def registerK():
         connection.commit()
         connection.close()
 
-        return Response("Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann")
+        return Response("Sie sind nun ein glückliches Mitglied, welches sich Essen bestellen kann.")
     
 
     
