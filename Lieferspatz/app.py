@@ -24,6 +24,7 @@ def login_restaurant():
     return render_template("LoginRestaurant.html")
 
 
+
 @app.route('/registerkunde', methods=['GET', 'POST'])
 def registerK():
     if request.method == 'POST':
