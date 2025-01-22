@@ -5,8 +5,10 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-
+    #Hier wird auf die Main Seite verwiesen
     return render_template("KontoAnlegen.html")
+
+#Verweis von Main auf KontoAnlegen hier
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -22,15 +24,15 @@ def register():
 
         connection = sqlite3.connect("users.db")
         cursor = connection.cursor()
-        cursor.executemany('''
+        cursor.execute('''
                        insert into users (first_name, last_name, email, password, address, city, zip)
                        VALUES (?, ?, ?, ?, ?, ?, ?)
-                       '''), (first_name, last_name, email, password, address, city, zip)
+                       ''', (first_name, last_name, email, password, address, city, zip))
         
         connection.commit()
         connection.close()
 
-        return "Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann"
+        return request.form["Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann"]
     
 
     
