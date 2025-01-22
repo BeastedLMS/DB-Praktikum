@@ -5,27 +5,22 @@ app = Flask(__name__)
 
 @app.route('/')
 def start_anmeldung():
-    #Hier wird auf die Main Seite verwiesen
     return render_template("StartAnmeldung.html")
 
 @app.route('/konto-anlegen-kunde', methods=['GET'])
 def konto_anlegen_kunde():
-    #Hier wird auf die Main Seite verwiesen
     return render_template("KontoAnlegenKunde.html")
 
 @app.route('/konto-anlegen-restaurant', methods=['GET'])
 def konto_anlegen_restaurant():
-    #Hier wird auf die Main Seite verwiesen
     return render_template("KontoAnlegenRestaurant.html")
 
 @app.route('/login-kunde', methods=['GET'])
 def login_kunde():
-    #Hier wird auf die Main Seite verwiesen
     return render_template("LoginKunde.html")
 
 @app.route('/login-restaurant', methods=['GET'])
 def login_restaurant():
-    #Hier wird auf die Main Seite verwiesen
     return render_template("LoginRestaurant.html")
 
 
