@@ -46,7 +46,31 @@ def registerK():
         connection.commit()
         connection.close()
 
-    return Response("Sie sind nun ein glückliches Mitglied, welches sich Essen bestellen kann.")
+    return render_template("KontoAngelegt.html")
+
+
+@app.route('/registerrestaurant', methods=['GET', 'POST'])
+def registerR():
+    if request.method == 'POST':
+
+        restaurant_name = request.form["restaurant_name"]
+        email = request.form["email"]
+        password = request.form["password"]
+        address = request.form["address"]
+        zip = request.form["zip"]
+        caption = request.form["caption"]
+
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+        cursor.execute('''
+                       insert into restaurants (restaurant_name, email, password, address, zip, caption)
+                       VALUES (?, ?, ?, ?, ?, ?)
+                       ''', (restaurant_name, email, password, address, zip, caption))
+        
+        connection.commit()
+        connection.close()
+
+    return render_template("KontoAngelegt.html")
     
 
     
