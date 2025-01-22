@@ -8,7 +8,7 @@ def home():
     #Hier wird auf die Main Seite verwiesen
     return render_template("KontoAnlegen.html")
 
-#Verweis von Main auf KontoAnlegen hier
+#Verweis von Main auf KontoAnlegen muss noch hierhin
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
