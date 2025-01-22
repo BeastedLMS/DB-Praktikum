@@ -1,0 +1,90 @@
+{% extends "base.html" %}{% block title %}Bestellen{% endblock %}
+
+{% block navbarContent %} 
+<nav class="navbar bg-body-tertiary"> 
+    <div class="container-fluid"> 
+ 
+        <a class="navbar-brand" href="/"> 
+            <img src="https://images.emojiterra.com/openmoji/v15.1/1024px/1f7e1.png" width="25" height="24" class="d-inline-block align-text-top"> 
+            Lieferspatz 
+        </a>
+        
+        <a href="/warenkorb" class="btn" >
+            <i class="bi bi-cart-fill" style="font-size: 1.5em"></i>
+        </a>
+
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<div class="p-5">
+    <div class="card-body">
+        <div class="row mx-2">
+            <div class="col-8">
+                <h1 class="card-title">{{Restaurantname}}</h1>
+                <p class="card-text">{{Adresse}}<br>{{Stadt}} {{postLeihZahl}}</p>
+                <p class="card-text">Öffnungszeiten:<br>
+                    Mo.: __:__ bis __:__ Uhr<br>
+                    Di.: __:__ bis __:__ Uhr<br>
+                    Mi.: __:__ bis __:__ Uhr<br>
+                    Do.: __:__ bis __:__ Uhr<br>
+                    Fr.: __:__ bis __:__ Uhr<br>
+                    Sa.: __:__ bis __:__ Uhr<br>
+                    So.: __:__ bis __:__ Uhr<br>
+                </p>
+            </div>
+            <div class="col-4">
+                <img src="https://hamburg.mitvergnuegen.com/wp-content/uploads/sites/2/2021/11/restaurants-hafencity-titelbild.png" class="img-fluid" >
+            </div>
+            <div class="col-12 p-2">
+                <p class="card-text">{{Beschreibung}}</p>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="card">
+    <div class="row">
+        <div class="col-12">
+          <div class="card-body">
+                <h1 class="card-title">Kategorienname</h1>
+                
+                <div class="row row-cols-1 mt-3"> <!--eine Spalte pro Zeile, mt = margin top-->
+                    {% for item, itembeschreibung, preis in items %}
+                    <div class="col">
+                        <div class="card mb-3 mx-3">
+                            <div class="card-body">
+            
+                                <div class="row mx-2">
+                                    <div class="col-8">
+                                        <h5 class="card-title">{{ item }}</h5>
+                                        <p class="card-text">{{ itembeschreibung }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://www.sc-reckenfeld.de/wp-content/uploads/2021/06/placeholder.png" class="img-fluid">
+                                    </div>
+                                </div
+                                >
+                                <div class="row mx-2 mt-3">
+                                    <div class="col-8">
+                                        <h5 class="card-title">{{ preis + "€" }}</h5>
+                                    </div>
+                                    <div class="col-4 d-flex align-items-center justify-content-between"> <!--justify-content-between: gleichmäßig platz zwischen Elementen-->
+                                        <button class="btn btn-primary" type="submit">hinzufügen</button>
+                                        <button class="btn btn-primary" type="submit">-</button>
+                                        <h5 class="card-title">0</h5>
+                                        <button class="btn btn-primary" type="submit">+</button>
+                                    </div>
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %} 
+                </div>   
+          </div>
+        </div>
+    </div>    
+</div>
+{% endblock %}
