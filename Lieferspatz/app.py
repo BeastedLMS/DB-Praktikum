@@ -3,39 +3,31 @@ import sqlite3
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
+@app.route('/')
+def start_anmeldung():
+    #Hier wird auf die Main Seite verwiesen
+    return render_template("StartAnmeldung.html")
+
+@app.route('/konto-anlegen-kunde', methods=['GET'])
+def konto_anlegen_kunde():
     #Hier wird auf die Main Seite verwiesen
     return render_template("KontoAnlegenKunde.html")
 
-#Verweis von Main auf KontoAnlegen, sowohl Kunde als auch Restaurants, muss noch hierhin
+@app.route('/konto-anlegen-restaurant', methods=['GET'])
+def konto_anlegen_restaurant():
+    #Hier wird auf die Main Seite verwiesen
+    return render_template("KontoAnlegenRestaurant.html")
 
-@app.route('/', methods=['GET', 'POST'])
-def registerR():
-    
-    if request.method == 'POST':
+@app.route('/login-kunde', methods=['GET'])
+def login_kunde():
+    #Hier wird auf die Main Seite verwiesen
+    return render_template("LoginKunde.html")
 
-        first_name = request.form["first_name"]
-        last_name = request.form["last_name"]
-        email = request.form["email"]
-        password = request.form["password"]
-        address = request.form["address"]
-        city = request.form["city"]
-        zip = request.form["zip"]
+@app.route('/login-restaurant', methods=['GET'])
+def login_restaurant():
+    #Hier wird auf die Main Seite verwiesen
+    return render_template("LoginRestaurant.html")
 
-        connection = sqlite3.connect("database.db")
-        cursor = connection.cursor()
-        cursor.execute('''
-                       insert into users (first_name, last_name, email, password, address, city, zip)
-                       VALUES (?, ?, ?, ?, ?, ?, ?)
-                       ''', (first_name, last_name, email, password, address, city, zip))
-        
-        connection.commit()
-        connection.close()
-
-        return Response("Sie sind nun ein glückliches Mitlgied, welches sich Essen bestellen kann")
-    
-    
 
 @app.route('/registerkunde', methods=['GET', 'POST'])
 def registerK():
@@ -59,7 +51,7 @@ def registerK():
         connection.commit()
         connection.close()
 
-        return Response("Sie sind nun ein glückliches Mitglied, welches sich Essen bestellen kann.")
+    return Response("Sie sind nun ein glückliches Mitglied, welches sich Essen bestellen kann.")
     
 
     
