@@ -17,5 +17,17 @@ CREATE TABLE IF NOT EXISTS users (
     )
 ''')
 
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS restaurants (
+    restaurant_name TEXT,
+    email TEXT,
+    password TEXT,
+    address TEXT,
+    zip TEXT,
+    caption TEXT,
+    PRIMARY KEY(email)
+    )
+''')
+
 connection.commit()
 connection.close()
