@@ -22,7 +22,7 @@ def register():
         city = request.form["city"]
         zip = request.form["zip"]
 
-        connection = sqlite3.connect("users.db")
+        connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
                        insert into users (first_name, last_name, email, password, address, city, zip)
