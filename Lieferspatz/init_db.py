@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT,
     city TEXT,
     zip TEXT,
-    PRIMARY KEY(first_name, last_name)
+    PRIMARY KEY(email)
     )
 ''')
 
