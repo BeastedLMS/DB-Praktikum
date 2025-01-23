@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-3">
+      <div class="card" style="width: 250px">
+        <img src="static\speisekarte.png" class="card-img-top" alt="Menü" />
+        <div class="card-body justify-content-center">
+          <h5 class="card-title">Menü</h5>
+          <a href="/menu" class="btn btn-warning">Zur Speisekarte</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card" style="width: 250px">
+        <img src="static\post.png" class="card-img-top" alt="Bestellungen" />
+        <div class="card-body">
+          <h5 class="card-title">Bestellungen</h5>
+          <a href="/orders" class="btn btn-warning">Jetzt ansehen</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card" style="width: 250px">
+        <img
+          src="static\schild-offnen.png"
+          class="card-img-top"
+          alt="Öffnungszeiten"
+        />
+        <div class="card-body">
+          <h5 class="card-title">Öffnungszeiten</h5>
+          <a href="/hours" class="btn btn-warning">Jetzt bearbeiten</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-3">
+      <div class="card" style="width: 250px">
+        <img
+          src="static\maps-and-location.png"
+          class="card-img-top"
+          alt="Lieferradius"
+        />
+        <div class="card-body">
+          <h5 class="card-title">Lieferradius</h5>
+          <a href="/Lieferradius" class="btn btn-warning">Jetzt bearbeiten</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card" style="width: 250px">
+        <img
+          src="static\money-management.png"
+          class="card-img-top"
+          alt="Guthaben"
+        />
+        <div class="card-body">
+          <h5 class="card-title">Guthaben</h5>
+          <a href="/creditBalance" class="btn btn-warning">Jetzt ansehen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+
+<div
+  class="border border-primary rounded p-4 mx-auto mt-5"
+  style="width: 400px"
+>
+  <h4 class="text-center mt-4 mb-4">Login</h4>
+  <div class="d-flex align-items-center mb-3">
+    Noch kein Konto?
+    <a href="/signUp" class="btn btn-link p-0 ms-2">Konto erstellen</a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <!-- Benutzername Input -->
+      <label class="form-label" for="username">Benutzername</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        placeholder="Benutzername"
+        style="width: 350px"
+        required
+      />
+    </div>
+  </div>
+
+  <!-- Passwort Input -->
+  <div class="row">
+    <div class="col-md-6 mb-5">
+      <label class="form-label" for="password">Passwort</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Passwort"
+        style="width: 350px"
+        required
+      />
+    </div>
+  </div>
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary" style="width: 350px">
+    Sign in
+  </button>
+</div>
+
+{% endblock %}

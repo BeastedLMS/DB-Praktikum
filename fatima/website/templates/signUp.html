@@ -1,0 +1,100 @@
+{% extends "base.html" %} {% block title %}SignUp{% endblock %} {% block content
+%}
+
+<div class="border border-primary rounded p-4 mx-auto" style="width: 700px">
+  <h4 class="text-left mb-3">Sign up</h4>
+  <div class="row">
+    <div class="col-md-6">
+      <label class="form-label" for="restaurant_name"
+        >Name des Restaurants</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="restaurant_name"
+        id="restaurant_name"
+        required
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="username">Benutzername</label>
+      <input
+        type="text"
+        class="form-control"
+        name="username"
+        id="username"
+        required
+      />
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-6">
+      <label class="form-label" for="street">Straße</label>
+      <input
+        type="text"
+        class="form-control"
+        name="street"
+        id="street"
+        required
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="plz" >PLZ</label>
+      <input
+        type="text"
+        class="form-control"
+        name="plz"
+        id="plz"
+        required
+      />
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="mb-3">
+      <label class="form-label"  for="description">Beschreibung</label>
+      <textarea class="form-control" name="description" id="description" rows="2"></textarea>
+    </div>
+    </div>
+
+
+<div class="row">
+    <div class="mb-3">
+    <label class="form-label" for="picture" >Bild hinzufügen</label>
+    <div class="input-group">
+      <input
+        type="file"
+        class="form-control"
+        name="picture"
+        id="picture"
+        aria-describedby="inputPicture"
+        aria-label="Upload"
+      />
+    </div>
+    </div>
+</div>
+
+    <div class="mb-3">
+      <label class="form-label" for="password">Passwort</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="password"
+          id="password"
+          aria-describedby="inputGroupPrepend2"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Konto erstellen</button>
+    </div>
+    <div class="d-flex align-items-center mt-2">
+    Sie haben bereits ein Konto?
+    <a href="/login" class="btn btn-link p-0 ms-2">zum Login</a>
+  </div>
+  </form>
+  </div>
+{% endblock %}
