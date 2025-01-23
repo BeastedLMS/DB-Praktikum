@@ -65,3 +65,5 @@ Menue: {name, price, image, restaurantEmail}
 Bestellung: {liste:items, gesamtpreis, status, lieferadresse, datum, zeit, Restaurant.name}
 Restaurant: {lieferadius(liste von Postleihzahlen), Guthaben}
 Öffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }
+
+Fatima Settingsseite und Startseite = Bestellungsseite
