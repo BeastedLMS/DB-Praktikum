@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for #???
-from .models import User, Restaurant
-from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 
 auth = Blueprint('auth', __name__)
@@ -117,24 +115,24 @@ def signupKunde():
         vorname = request.form.get("vorname")
         password = request.form.get("passwort")
         
-        user = User.query.filter_by(email=email).first
-        if user:
-            flash('Dieses Konto existiert bereits. Melden sie sich bitte an.', category='error')
+        # user = User.query.filter_by(email=email).first
+        # if user:
+        #     flash('Dieses Konto existiert bereits. Melden sie sich bitte an.', category='error')
 
 
-        elif len(email) < 4:
-            flash('Bitte gültige Email Adresse eingeben.', category='error')
-        elif len(vorname) < 2:
-            flash('Bitte gültigen Namen eingeben.', category='error')
-        elif len(password) < 7:
-            flash('Das Passwort muss länger als 6 Zeichen sein.', category='error')
-        else:
-            #add user to database
-            new_user = User(email=email, password=generate_password_hash(password, method='pbkdf2:sha256'), vorname=vorname)
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Der Account wurde erstellt!', category='success')
-            return redirect(url_for('views.home')) 
+        # elif len(email) < 4:
+        #     flash('Bitte gültige Email Adresse eingeben.', category='error')
+        # elif len(vorname) < 2:
+        #     flash('Bitte gültigen Namen eingeben.', category='error')
+        # elif len(password) < 7:
+        #     flash('Das Passwort muss länger als 6 Zeichen sein.', category='error')
+        # else:
+        #     #add user to database
+        #     new_user = User(email=email, password=password, vorname=vorname)
+        #     db.session.add(new_user)
+        #     db.session.commit()
+        #     flash('Der Account wurde erstellt!', category='success')
+        #     return redirect(url_for('views.home')) 
         
     return render_template("signupKunde.html")
 
@@ -150,23 +148,23 @@ def signupGeschaeft():
         bild = request.form.get("datei")
         beschreibung = request.form.get("beschreibung")
 
-        geschaeft = Restaurant.query.filter_by(email=email).first
-        if geschaeft:
-            flash('Dieses Konto existiert bereits. Melden sie sich bitte an.', category='error')
+        # geschaeft = Restaurant.query.filter_by(email=email).first
+        # if geschaeft:
+        #     flash('Dieses Konto existiert bereits. Melden sie sich bitte an.', category='error')
 
-        elif len(email) < 4:
-            flash('Bitte gültige Email Adresse eingeben.', category='error')
-        elif len(name) < 2:
-            flash('Bitte gültigen Namen eingeben.', category='error')
-        elif len(password) < 7:
-            flash('Das Passwort muss länger als 6 Zeichen sein.', category='error')
-        else:
-            #add user to database
-             newRestaurant = Restaurant(email=email, name=name, adresse=adresse, stadt=stadt, plz=plz,  password=password, beschreibung=beschreibung)            
-             db.session.add(newRestaurant)
-             db.session.commit()
-             flash('Der Account wurde erstellt!', category='success')
-             #return redirect(url_for('views.home')) 
-             return render_template("bestellungZusammenstellen.html", Restaurantname=name, Adresse=adresse, Stadt=stadt, postLeihZahl=plz, Beschreibung=beschreibung)   
+        # elif len(email) < 4:
+        #     flash('Bitte gültige Email Adresse eingeben.', category='error')
+        # elif len(name) < 2:
+        #     flash('Bitte gültigen Namen eingeben.', category='error')
+        # elif len(password) < 7:
+        #     flash('Das Passwort muss länger als 6 Zeichen sein.', category='error')
+        # else:
+        #     #add user to database
+        #      newRestaurant = Restaurant(email=email, name=name, adresse=adresse, stadt=stadt, plz=plz,  password=password, beschreibung=beschreibung)            
+        #      db.session.add(newRestaurant)
+        #      db.session.commit()
+        #      flash('Der Account wurde erstellt!', category='success')
+        #      #return redirect(url_for('views.home')) 
+        #      return render_template("bestellungZusammenstellen.html", Restaurantname=name, Adresse=adresse, Stadt=stadt, postLeihZahl=plz, Beschreibung=beschreibung)   
 
     return render_template("signupGeschaeft.html")
