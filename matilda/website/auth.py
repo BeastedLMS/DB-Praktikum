@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for #???
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+
 
 auth = Blueprint('auth', __name__)
 
@@ -127,9 +128,7 @@ def signupKunde():
         #     flash('Das Passwort muss länger als 6 Zeichen sein.', category='error')
         # else:
         #     #add user to database
-        #     new_user = User(email=email, password=password, vorname=vorname)
-        #     db.session.add(new_user)
-        #     db.session.commit()
+        #    
         #     flash('Der Account wurde erstellt!', category='success')
         #     return redirect(url_for('views.home')) 
         
