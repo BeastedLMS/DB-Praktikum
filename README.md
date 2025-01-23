@@ -3,37 +3,37 @@ Web-Anwendung mit SQLite Datenbank
 ## Checkliste für DB-Praktikum
 
 ### 1. Projektübersicht
-- [ ] **Projektname**: Lieferspatz
-- [ ] **Beschreibung**: Eine vereinfachte Plattform für die Lieferung von Speisen und Getränken.
-- [ ] **Ziel**: Implementierung einer Webanwendung zur Bestellung von Essen bei verschiedenen Restaurants.
+- [x] **Projektname**: Lieferspatz
+- [x] **Beschreibung**: Eine vereinfachte Plattform für die Lieferung von Speisen und Getränken.
+- [x] **Ziel**: Implementierung einer Webanwendung zur Bestellung von Essen bei verschiedenen Restaurants.
 
 ### 2. Gruppeninformationen
-- [ ] **Gruppenmitglieder**: Namen und Matrikelnummern auflisten.
-- [ ] **Gruppennummer**: Gruppennummer angeben.
+- [x] **Gruppenmitglieder**: Namen und Matrikelnummern auflisten.
+- [x] **Gruppennummer**: Gruppennummer angeben.
 
 ### 3. Projektphasen
-- [ ] **Phase 1**: Konzeptpapier  https://uniduede-my.sharepoint.com/:w:/r/personal/sven_heimbach_stud_uni-due_de/_layouts/15/Doc.aspx?sourcedoc=%7BBFFCD01A-4E9A-4DD2-BC43-5B406BC17604%7D&file=Konzeptpapier.docx
-  - [ ] Software-Architektur
-  - [ ] Datenbankdesign
-  - [ ] UI-Mockups
+- [x] **Phase 1**: Konzeptpapier  https://uniduede-my.sharepoint.com/:w:/r/personal/sven_heimbach_stud_uni-due_de/_layouts/15/Doc.aspx?sourcedoc=%7BBFFCD01A-4E9A-4DD2-BC43-5B406BC17604%7D&file=Konzeptpapier.docx
+  - [x] Software-Architektur
+  - [x] Datenbankdesign
+  - [x] UI-Mockups
 - [ ] **Phase 2**: Implementierung
   - [ ] Entwicklung der Webanwendung
   - [ ] Datenbankintegration
 
 ### 4. Fristen
 - [x] **Gruppenanmeldung**: 18.11, 23:59 Uhr
-- [ ] **Abgabe des Konzeptpapiers**: 02.12, 23:59 Uhr
-- [ ] **Mündliche Prüfungen**: Ende der Vorlesungszeit/Anfang der vorlesungsfreien Zeit
+- [x] **Abgabe des Konzeptpapiers**: 02.12, 23:59 Uhr
+- [ ] **Mündliche Prüfungen**: Ende der Vorlesungszeit/Anfang der vorlesungsfreien Zeit 29.01 16 Uhr
 
 ### 5. Funktionale Anforderungen
 - [ ] **Funktionen für Restaurants**:
-  - [ ] Geschäftskonto erstellen
+  - [x] Geschäftskonto erstellen
   - [ ] Menüeinträge verwalten
   - [ ] Öffnungszeiten und Lieferadius festlegen
   - [ ] Bestellbenachrichtigungen
   - [ ] Bestellhistorie einsehen
 - [ ] **Funktionen für Kunden**:
-  - [ ] Kundenkonto erstellen
+  - [x] Kundenkonto erstellen
   - [ ] Restaurants durchsuchen
   - [ ] Bestellungen aufgeben
   - [ ] Bestellstatus einsehen
@@ -45,14 +45,14 @@ Web-Anwendung mit SQLite Datenbank
 - [ ] **Guthabenverwaltung**: Aktuelles Guthaben für Kunden und Restaurants einsehbar
 
 ### 7. Technische Anforderungen
-- [ ] **Datenbank**: SQLite (serverseitig)
-- [ ] **Webanwendung**: Lokales Hosting, empfohlene Frameworks (Flask, Django, etc.)
+- [x] **Datenbank**: SQLite (serverseitig)
+- [x] **Webanwendung**: Lokales Hosting, empfohlene Frameworks (Flask, Django, etc.)
 - [ ] **Beispieldaten**:
   - [ ] 10 Restaurants mit je 10 Items
   - [ ] 5 Kunden mit je 2 abgeschlossenen Bestellungen
 
 ### 8. Prüfungsvorbereitung
-- [ ] **Mockups**: UI-Mockups für wichtige Szenarien erstellen
+- [x] **Mockups**: UI-Mockups für wichtige Szenarien erstellen
 - [ ] **Codeverständnis**: Sicherstellen, dass alle Gruppenmitglieder den Code verstehen und Fragen beantworten können
 
 ### 9. Unterstützung und Ressourcen
