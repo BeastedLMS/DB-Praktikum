@@ -5,7 +5,6 @@ def create_app():
     
     # Importiere und registriere die Routen
     from .views import views
-    from .auth import auth
     
     app.register_blueprint(views, url_prefix='/')
     return app

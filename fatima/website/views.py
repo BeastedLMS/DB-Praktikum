@@ -6,36 +6,40 @@ views = Blueprint('views', __name__)
 def home():
     return render_template('home.html')
 
-@views.route("/signUp", methods=['GET', 'POST'])
+@views.route('/signUp')
 def signUp():
-    if request.method == 'POST':
-        restaurant_name = request.form.get('restaurant_name')
-        username = request.form.get('username')
-        street = request.form.get('street')
-        plz = request.form.get('plz')
-        description = request.form.get('description')
-        picture = request.form.get('picture')
-        password = request.form.get('password')
+    return render_template('signUp.html')
 
-    try:
-        # Verbindung zur Datenbank
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
+# @views.route("/signUp", methods=['GET', 'POST'])
+# def signUp():
+#     if request.method == 'POST':
+#         restaurant_name = request.form.get('restaurant_name')
+#         username = request.form.get('username')
+#         street = request.form.get('street')
+#         plz = request.form.get('plz')
+#         description = request.form.get('description')
+#         picture = request.form.get('picture')
+#         password = request.form.get('password')
 
-        # Nutzer in die Tabelle einfügen
-        cursor.execute("INSERT INTO restaurant_users (restaurant_name, username, street, plz, description, picture, password) VALUES (?, ?, ?)", 
-                       (restaurant_name, username, street, plz, description, picture, password))
-        conn.commit()
-        conn.close()
+#     try:
+#         # Verbindung zur Datenbank
+#         conn = sqlite3.connect("database.db")
+#         cursor = conn.cursor()
 
-        flash("Account erfolgreich erstellt!", "success")
-        return redirect("/login")  # Nach erfolgreicher Registrierung weiterleiten
+#         # Nutzer in die Tabelle einfügen
+#         cursor.execute("INSERT INTO restaurant_users (restaurant_name, username, street, plz, description, picture, password) VALUES (?, ?, ?)", 
+#                        (restaurant_name, username, street, plz, description, picture, password))
+#         conn.commit()
+#         conn.close()
 
-    except Exception as e:
-        flash(f"Ein Fehler ist aufgetreten: {e}", "error")
-        return render_template('signUp.html')
+#         flash("Account erfolgreich erstellt!", "success")
+#         return redirect("/login")  # Nach erfolgreicher Registrierung weiterleiten
 
-return render_template('signUp.html')
+#     except Exception as e:
+#         flash(f"Ein Fehler ist aufgetreten: {e}", "error")
+#         return render_template('signUp.html')
+
+# return render_template('signUp.html')
 
 @views.route("/login")
 def login():
