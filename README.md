@@ -58,3 +58,10 @@ Web-Anwendung mit SQLite Datenbank
 ### 9. Unterstützung und Ressourcen
 - [ ] **Wöchentliche Sprechstunden**: Freitags 14-16 Uhr, LE 104
 - [ ] **Moodle-Forum**: https://moodle.uni-due.de/course/view.php?id=47891
+
+
+Tabellen:
+Menue: {name, price, image, restaurantEmail}
+Bestellung: {liste:items, gesamtpreis, status, lieferadresse, datum, zeit, Restaurant.name}
+Restaurant: {lieferadius(liste von Postleihzahlen), Guthaben}
+Öffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }
