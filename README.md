@@ -64,11 +64,15 @@ Tabellen:
 backend:
 menue: {name, price, image, restaurantEmail}  **DONE**
 bestellung: {liste:items, gesamtpreis, status, lieferadresse, datum, zeit, Restaurant.name}   
+menue Liste: {item_id(primärschlüssel), item_name, price, caption, restaurant_email(fremdschlüssel)}
 restaurant: {lieferadius(liste von Postleihzahlen), Guthaben} 
         Nach Recherche hat sich ergeben das eine eigene Tabelle für den Lieferadius anbietet:
         delivery_areas: {id(primärschlüssel, autoincrement), restaurant_email(fremdschlüssel), postleitzahl(welche vom restaurant beliefert wird(für jede beliefrte eine Zeile))}
 oeffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }   **Done**
 Idee: julianday() or utcnow() als Zeitangabe um herauszufinden welche bestellung die älteste und welche die neuste ist
+Für späteres Arbeiten auf den einzelnen Seiten verwenden wir Sessions
+        -Unterschiedliche Schlüssel für User und Restaurant damit wir beides theoretisch gleichzeitig verwenden können
+        --> z.B. user_id, restaurant_id usw.
 
 
 Frontend:
