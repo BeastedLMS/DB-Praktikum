@@ -150,3 +150,7 @@ def bestellungZusammenstellen():
 @views.route('/bestellhistorie')
 def bestellhistorie():
     return render_template("bestellhistorie.html")
+
+@views.route('/warenkorb')
+def warenkorb():
+    return render_template("warenkorb.html")
