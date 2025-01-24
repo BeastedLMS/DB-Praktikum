@@ -1,0 +1,64 @@
+{% extends "baseRestaurant.html" %} {% block title %}Verwaltung{% endblock %} {%
+block content %}
+
+<div class="container mt-5">
+  <h2 class="mb-4">Verwaltung</h2>
+
+  <!-- Abschnitt für Öffnungszeiten -->
+  <div class="border rounded p-4 mb-5" style="background-color: #f9f9f9">
+    <h3>Öffnungszeiten</h3>
+    <form method="POST" action="/verwaltung">
+      <table class="table table-bordered mt-4">
+        <thead class="table-light">
+          <tr>
+            <th>Tag</th>
+            <th>Öffnungszeit</th>
+            <th>Schließzeit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Wochentage festlegen -->
+          {% for day in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
+          'Freitag', 'Samstag', 'Sonntag'] %}
+          <tr>
+            <td>{{ day }}</td>
+            <td>
+              <input
+                type="time"
+                class="form-control"
+                name="{{ day }}_opening_time"
+                value="{{ opening_hours.get(day, {}).get('opening_time', '') }}"
+                required
+              />
+            </td>
+            <td>
+              <input
+                type="time"
+                class="form-control"
+                name="{{ day }}_closing_time"
+                value="{{ opening_hours.get(day, {}).get('closing_time', '') }}"
+                required
+              />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="submit" class="btn btn-success mt-3">Speichern</button>
+    </form>
+  </div>
+
+  <!-- Dummy Abschnitt für Lieferradius -->
+  <div class="border rounded p-4" style="background-color: #f9f9f9">
+    <h3>Lieferradius</h3>
+    <ul class="list-group mt-3">
+      <li class="list-group-item">10115</li>
+      <li class="list-group-item">10117</li>
+      <li class="list-group-item">10119</li>
+      <li class="list-group-item">10178</li>
+      <li class="list-group-item">10243</li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

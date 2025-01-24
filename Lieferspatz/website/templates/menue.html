@@ -1,0 +1,38 @@
+{% extends "baseRestaurant.html" %} {% block title %}Speisekarte{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+  <h2 class="mb-3">Speisekarte</h2>
+  <div class="row row-cols-auto">
+    <!-- {% for item in items %} -->
+    <div class="col-md-3">
+      <div class="card small-card mb-3" style="background-color: #f9f9f9">
+        <!-- {% if item.image %} -->
+        <!-- <img
+          src="{{ url_for('static', filename='path/to/save/images/' ~ item.image) }}"
+          class="card-img-top"
+          alt="{{ item.name }}"
+        /> -->
+        <!-- {% else %} -->
+        <img src="static\food.jpg" class="card-img-top" alt="Dummy Foto" />
+        <!-- {% endif %} -->
+        <div class="card-body">
+          <h5 class="card-title">Name</h5>
+          <!-- <h5 class="card-title">{{ item.name }}</h5> -->
+          <p class="card-text">Description</p>
+          <!-- <p class="card-text">{{ item.description}}</p> -->
+          <p class="card-text"><strong>Preis:</strong> 00€</p>
+          <!-- <p class="card-text"><strong>Preis:</strong> €{{ item.price }}</p> -->
+          <button class="btn btn-warning" onclick="editItem('dummy-id')">
+            Bearbeiten
+          </button>
+          <button class="btn btn-danger" onclick="removeItem('dummy-id')">
+            Entfernen
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- {% endfor %} -->
+  </div>
+</div>
+{% endblock %}

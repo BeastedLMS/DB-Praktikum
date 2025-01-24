@@ -125,9 +125,9 @@ def signupGeschaeft():
     
     return render_template("signupGeschaeft.html")
 
-@views.route('/homeRestaurant')
+@views.route('/homeRestaurantNeu')
 def homeRestaurant():
-    return render_template('homeRestaurant.html')
+    return render_template('homeRestaurantNeu.html')
 
 @views.route('/homeKunde')
 def homeKunde():
@@ -154,3 +154,41 @@ def bestellhistorie():
 @views.route('/warenkorb')
 def warenkorb():
     return render_template("warenkorb.html")
+
+@views.route('/menue')
+def menue():
+    return render_template("menue.html")
+
+@views.route('/verwaltung')
+def verwaltung():
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+
+    if request.method == 'POST':
+        for day in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']:
+            opening_time = request.form.get(f'{day}_opening_time', '')
+            closing_time = request.form.get(f'{day}_closing_time', '')
+            restaurant_email = 'restaurant@example.com'  # Beispiel
+
+            # Update der Datenbank für jeden Tag
+            cursor.execute('''
+                UPDATE oeffnungszeiten
+                SET opening_time = ?, closing_time = ?
+                WHERE restaurant_email = ? AND day_of_the_week = ?
+            ''', (opening_time, closing_time, restaurant_email, day))
+        connection.commit()
+
+    # Holen der aktuellen Öffnungszeiten aus der Datenbank
+    cursor.execute('''
+        SELECT day_of_the_week, opening_time, closing_time
+        FROM oeffnungszeiten
+        WHERE restaurant_email = 'restaurant@example.com'
+    ''')
+    opening_hours = cursor.fetchall()
+    connection.close()
+
+    # Umwandeln in ein Wörterbuch
+    opening_hours_dict = {day: {'opening_time': opening_time, 'closing_time': closing_time}
+                          for day, opening_time, closing_time in opening_hours}
+
+    return render_template('verwaltung.html', opening_hours=opening_hours_dict)
