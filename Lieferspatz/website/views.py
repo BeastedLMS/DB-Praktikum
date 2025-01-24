@@ -146,3 +146,7 @@ def homeKunde():
 @views.route('bestellen')
 def bestellungZusammenstellen():
     return render_template("bestellungZusammenstellen.html")
+
+@views.route('/bestellhistorie')
+def bestellhistorie():
+    return render_template("bestellhistorie.html")
