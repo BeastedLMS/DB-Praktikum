@@ -61,9 +61,11 @@ Web-Anwendung mit SQLite Datenbank
 
 
 Tabellen:
-Menue: {name, price, image, restaurantEmail}
-Bestellung: {liste:items, gesamtpreis, status, lieferadresse, datum, zeit, Restaurant.name}
-Restaurant: {lieferadius(liste von Postleihzahlen), Guthaben}
-Öffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }
+menue: {name, price, image, restaurantEmail}  **DONE**
+bestellung: {liste:items, gesamtpreis, status, lieferadresse, datum, zeit, Restaurant.name}   
+restaurant: {lieferadius(liste von Postleihzahlen), Guthaben}
+        Nach Recherche hat sich ergeben das eine eigene Tabelle für den Lieferadius anbietet:
+        delivery_areas: {id(primärschlüssel, autoincrement), restaurant_email(fremdschlüssel), postleitzahl(welche vom restaurant beliefert wird(für jede beliefrte eine Zeile))}
+oeffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }
 
 Fatima Settingsseite und Startseite = Bestellungsseite

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT,
     city TEXT,
     zip TEXT,
+    guthaben NUMERIC(10,2),
     PRIMARY KEY(email)
     )
 ''')
@@ -25,9 +26,22 @@ CREATE TABLE IF NOT EXISTS restaurants (
     address TEXT,
     zip TEXT,
     caption TEXT,
+    guthaben NUMERIC(10,2),
     PRIMARY KEY(email)
     )
 ''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS menue (
+    item_name TEXT,
+    price NUMERIC(10,2) NOT NULL,
+    restaurant_email TEXT,
+    FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+    )
+''')
+
 
 connection.commit()
 connection.close()
