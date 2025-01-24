@@ -24,8 +24,10 @@ CREATE TABLE IF NOT EXISTS restaurants (
     email TEXT,
     password TEXT,
     address TEXT,
+    city TEXT,
     zip TEXT,
     caption TEXT,
+    bild TEXT,
     guthaben NUMERIC(10,2),
     PRIMARY KEY(email)
     )
