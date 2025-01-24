@@ -2,7 +2,8 @@ from flask import Flask
 
 def create_app():
     app = Flask(__name__)
-    
+    app.config['SECRET_KEY'] = 'HSHGJSGJSGJjjhgdjh4' #for cookies
+
     # Importiere und registriere die Routen
     from .views import views
     

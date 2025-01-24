@@ -41,7 +41,10 @@ def login():
             flash('Sie sind eingeloggt!', category='success')
             return redirect(url_for('')) #Route zur Hauptseite des Restaurants einfügen
         
+        flash('Ungültige E-Mail oder Passwort. Bitte versuche es erneut.', 'error')
+
     return render_template("login.html", text="Testing", user="Name", boolean=True)
+
 
 @views.route('/signupKunde', methods=['GET', 'POST'])
 def signupKunde():
@@ -58,9 +61,12 @@ def signupKunde():
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute("SELECT COUNT(*) FROM users WHERE email = ?", (email,))
-        count = cursor.fetchall()
-        if count > 0:
+        cursor.execute('''
+                       SELECT email FROM users WHERE email = ?;    
+                       ''', (email,))
+        
+        ex_check = cursor.fetchone()
+        if ex_check:
             connection.close()
             flash('Dieser Account existiert bereits.', category='error')
             return render_template("signupKunde.html")
@@ -72,6 +78,8 @@ def signupKunde():
         
         connection.commit()
         connection.close()
-
-    flash('Sie haben sich erfolgreich registriert!', category='success')
-    return render_template("/")
+        flash('Sie haben sich erfolgreich registriert!', category='success')
+        return render_template("home")
+    
+    return render_template("signupKunde.html")
+    
