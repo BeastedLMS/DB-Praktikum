@@ -121,7 +121,7 @@ def signupGeschaeft():
         connection.commit()
         connection.close()
         flash('Sie haben sich erfolgreich registriert!', category='success')
-        return redirect(url_for("views.homeRestaurant"))
+        return redirect(url_for("views.home"))
     
     return render_template("signupGeschaeft.html")
 
