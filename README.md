@@ -67,5 +67,5 @@ restaurant: {lieferadius(liste von Postleihzahlen), Guthaben}
         Nach Recherche hat sich ergeben das eine eigene Tabelle für den Lieferadius anbietet:
         delivery_areas: {id(primärschlüssel, autoincrement), restaurant_email(fremdschlüssel), postleitzahl(welche vom restaurant beliefert wird(für jede beliefrte eine Zeile))}
 oeffnungszeiten: {Mo(00:00 Uhr), Di, ...., So }
-
+julianday() als Zeitangabe um herauszufinden welche bestellung die älteste und welche die neuste ist
 Fatima Settingsseite und Startseite = Bestellungsseite
