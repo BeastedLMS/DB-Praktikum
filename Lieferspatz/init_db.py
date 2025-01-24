@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS restaurants (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS menue (
+    item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_name TEXT,
     price NUMERIC(10,2) NOT NULL,
     restaurant_email TEXT,
