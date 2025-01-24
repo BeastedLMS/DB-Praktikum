@@ -116,7 +116,7 @@ def signupGeschaeft():
         cursor.execute('''
                        insert into restaurants (restaurant_name, email, password, address, city, zip, caption, bild, guthaben)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                       ''', (restaurant_name, email, password, address, city, zip, caption, bild, 100))
+                       ''', (restaurant_name, email, password, address, city, zip, caption, bild, 0))
         
         connection.commit()
         connection.close()
