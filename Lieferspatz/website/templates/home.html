@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% block title %}Start{% endblock %}
+
+{% block navbarContent %} 
+<nav class="navbar bg-body-tertiary"> 
+    <div class="container-fluid"> 
+ 
+      <a class="navbar-brand" href="/"> 
+        <img src="https://images.emojiterra.com/openmoji/v15.1/1024px/1f7e1.png" width="25" height="24" class="d-inline-block align-text-top"> 
+        Lieferspatz 
+      </a>
+    
+      <div class="d-flex ms-auto">
+        <a href="/login" class="btn btn-primary">Login</a> 
+      </div>
+
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<div class="p-5 my-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold">Restaurants in der Nähe</h1>
+      <p class="col-md-8 fs-4">Bestelle dein Essen bei Lieferspatz!</p>
+      <a href="/login" class="btn btn-primary btn-lg" >Jetzt bestellen</a>
+    </div>
+  </div>
+  <div class="row align-items-md-stretch">
+    <div class="col-md-6">
+      <div class="h-100 p-5 text-white bg-dark rounded-3">
+        <h2>Kundenaccount anlegen</h2>
+        <p>Jetzt Kundenkonto anlegen, um Essen bei Lieferspatz zu bestellen!</p>
+        <a href="/signupKunde" class="btn btn-outline-light" >Registrieren</a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="h-100 p-5 bg-light border rounded-3">
+        <h2>Geschäftsaccount anlegen</h2>
+        <p>Jetzt Geschäftskontoanlegen um Essen an Kunden zu versenden!</p>
+        <a href="/signupGeschaeft" class="btn btn-outline-secondary">Registrieren</a> 
+      </div>
+    </div>
+  </div>
+{% endblock %}
