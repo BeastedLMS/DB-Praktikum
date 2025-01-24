@@ -131,20 +131,18 @@ def homeRestaurant():
 
 @views.route('/homeKunde')
 def homeKunde():
-    restaurantListe =[{"name": "Dui Sushi", 
-                       "beschreibung": "Leckeres Sushi", 
-                       "adresse": "Moltkestraße 1", 
-                       "stadt": "Essen",
-                       "plz": "45128"}, 
-                       {"name": "Pizzeria Märchenwald Holsterhausen", 
-                        "beschreibung": "Köstliche Pizza", 
-                        "adresse": "Kaulbachstraße 61", 
-                        "stadt": "Essen",
-                        "plz": "45147"},
-                        {"name": "Falafel Haus", 
-                        "beschreibung": "Super Falafel", 
-                        "adresse": "Altenessener Straße 387", 
-                        "stadt": "Essen",
-                        "plz": "45326"}]
-    return render_template("homeKunde.html", restaurants=restaurantListe)
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    cursor.execute('''
+                   SELECT restaurant_name, caption, address, city, zip FROM restaurants
+                   ''')
+    restaurantListe = cursor.fetchall()
+    connection.close()
 
+    restaurants = [{"name": row[0], "beschreibung": row[1], "adresse": row[2], "stadt": row[3], "plz": row[4]} for row in restaurantListe]
+
+    return render_template("homeKunde.html", restaurants=restaurants)
+
+@views.route('bestellen')
+def bestellungZusammenstellen():
+    return render_template("bestellungZusammenstellen.html")
