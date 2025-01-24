@@ -26,7 +26,7 @@ def login():
 
         if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
-            return redirect(url_for('/restaurants')) #Route zur Hauptseite des Kunden einfügen
+            return redirect(url_for('views.restaurants')) #Route zur Hauptseite des Kunden einfügen
 
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
@@ -81,4 +81,23 @@ def signupKunde():
         return redirect(url_for("views.home"))
     
     return render_template("signupKunde.html")
+
+@views.route('/restaurants')
+def restaurants():
+    restaurantListe =[{"name": "Dui Sushi", 
+                       "beschreibung": "Leckeres Sushi", 
+                       "adresse": "Moltkestraße 1", 
+                       "stadt": "Essen",
+                       "plz": "45128"}, 
+                       {"name": "Pizzeria Märchenwald Holsterhausen", 
+                        "beschreibung": "Köstliche Pizza", 
+                        "adresse": "Kaulbachstraße 61", 
+                        "stadt": "Essen",
+                        "plz": "45147"},
+                        {"name": "Falafel Haus", 
+                        "beschreibung": "Super Falafel", 
+                        "adresse": "Altenessener Straße 387", 
+                        "stadt": "Essen",
+                        "plz": "45326"}]
+    return render_template("restaurants.html", restaurants=restaurantListe)
 
