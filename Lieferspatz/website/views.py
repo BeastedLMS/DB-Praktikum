@@ -13,31 +13,30 @@ def home():
 def login():
     if request.method == 'POST':
 
-        email_eingabe = request.form.get['email']
-        password_eingabe = request.form.get['password']
+        email_eingabe = request.form.get('email')
+        password_eingabe = request.form.get('password')
         
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
                        select password from users where email = ?
-                       ''', (email_eingabe))
-        password = cursor.fetchall()
+                       ''', (email_eingabe,))
+        result = cursor.fetchone()
         connection.close()
 
-        if password_eingabe == password:
+        if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
-            return redirect(url_for('')) #Route zur Hauptseite des Kunden einfügen
-
+            return redirect(url_for('/restaurants')) #Route zur Hauptseite des Kunden einfügen
 
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
                        select password from restaurants where email = ?
-                       ''', (email_eingabe))
-        password = cursor.fetchall()
+                       ''', (email_eingabe,))
+        result = cursor.fetchone()
         connection.close()
 
-        if password_eingabe == password:
+        if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
             return redirect(url_for('')) #Route zur Hauptseite des Restaurants einfügen
         
@@ -79,7 +78,7 @@ def signupKunde():
         connection.commit()
         connection.close()
         flash('Sie haben sich erfolgreich registriert!', category='success')
-        return render_template("home")
+        return redirect(url_for("views.home"))
     
     return render_template("signupKunde.html")
-    
+
