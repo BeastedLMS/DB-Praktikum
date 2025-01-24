@@ -46,14 +46,11 @@ CREATE TABLE IF NOT EXISTS menue (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS oeffnungszeiten (
-    restaurant_email TEXT PRIMARY KEY,
-    Mo TEXT,
-    Di TEXT,
-    Mi TEXT,
-    Do TEXT,
-    Fr TEXT,
-    Sa TEXT,
-    So TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    restaurant_email TEXT NOT NULL,
+    day_of_the_week TEXT NOT NULL,
+    opening_time TEXT NOT NULL,
+    closing_time TEXT NOT NULL,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
         ON DELETE CASCADE
         ON UPDATE CASCADE
