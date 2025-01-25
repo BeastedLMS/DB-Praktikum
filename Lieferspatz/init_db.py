@@ -51,12 +51,23 @@ CREATE TABLE IF NOT EXISTS oeffnungszeiten (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     restaurant_email TEXT NOT NULL,
     day_of_the_week TEXT NOT NULL,
-    opening_time TEXT NOT NULL,
-    closing_time TEXT NOT NULL,
+    opening_time TEXT,
+    closing_time TEXT,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
         ON DELETE CASCADE
         ON UPDATE CASCADE
     )            
+''')
+
+cursor.execute('''
+create table IF NOT EXISTS delivery_areas (
+    da_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    restaurant_email TEXT NOT NULL,
+    zip TEXT NOT NULL,
+    FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE          
+    )         
 ''')
 
 connection.commit()

@@ -49,7 +49,7 @@ block content %}
   </div>
 
   <!-- Dummy Abschnitt für Lieferradius -->
-  <div class="border rounded p-4" style="background-color: #f9f9f9">
+  <!-- <div class="border rounded p-4" style="background-color: #f9f9f9">
     <h3>Lieferradius</h3>
     <ul class="list-group mt-3">
       <li class="list-group-item">10115</li>
@@ -58,7 +58,42 @@ block content %}
       <li class="list-group-item">10178</li>
       <li class="list-group-item">10243</li>
     </ul>
-  </div>
+  </div> -->
+
+
+  <h2>Liefergebiete verwalten</h2>
+
+    <!-- Formular zum Hinzufügen einer neuen PLZ -->
+    <form action="/neue_plz" method="POST">
+        <label for="postal_code">Neue PLZ hinzufügen:</label>
+        <input type="text" id="postal_code" name="plz" required>
+        <button type="submit">PLZ hinzufügen</button>
+    </form>
+
+    <hr>
+
+    <!-- Tabelle zur Anzeige der aktuellen PLZs des Restaurants -->
+    <h3>Aktuelle belieferte Postleitzahlen</h3>
+    {% if areas %}
+        <ul>
+            {% for area in areas %}
+                <li>
+                    <!-- Hier werden die Details der PLZ angezeigt -->
+                    <strong>PLZ:</strong> {{ area[1] }}  
+                    <br>
+                    <!-- Formular zum Löschen der jeweiligen PLZ -->
+                    <form action="/delete_plz/{{ area[0] }}" method="POST" style="display:inline;">
+                        <button type="submit">Entfernen</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Es sind noch keine Liefergebiete festgelegt.</p>
+    {% endif %}
+
+
+  <!-- Testgebiet zuende-->
 </div>
 
 {% endblock %}

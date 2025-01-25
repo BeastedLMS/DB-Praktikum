@@ -289,6 +289,8 @@ def verwaltung():
                     
         connection.commit()
 
+        
+
     # Holen der aktuellen Öffnungszeiten aus der Datenbank
     cursor.execute('''
         SELECT day_of_the_week, opening_time, closing_time
@@ -303,3 +305,47 @@ def verwaltung():
                           for day, opening_time, closing_time in opening_hours}
 
     return render_template('verwaltung.html', opening_hours=opening_hours_dict)
+
+
+
+@views.route('/neue_plz', methods=['POST'])
+def neue_plz():
+    if request.method ==  'POST':
+        restaurant_email = session.get('restaurant_email')
+        plz = request.form.get('plz')
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute('''
+                        INSERT INTO delivery_areas (restaurant_email, zip)
+                        VALUES (?, ?)
+                        ''', (restaurant_email, plz))
+        connection.commit()
+        connection.close()
+        return redirect(url_for('views.show_delivery_area'))
+    
+@app.route('/delete_plz/<int:area_id>', methods=['POST'])
+def delete_plz(area_id):
+    if request.method == 'POST':
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute('''
+                        DELETE FROM delivery_areas
+                        WHERE da_id = ?
+                        ''', (area_id,))
+        connection.commit()
+        connection.close()
+        return redirect(url_for('views.show_delivery_area'))
+    
+@views.route('/show_delivery_area', methods=['GET'])
+def show_delivery_area():
+    if request.method == 'get':
+            connection = sqlite3.connect('database.db')
+            cursor = connection.cursor()
+            cursor.execute('''
+                            SELECT da_id, zip
+                            FROM delivery_areas
+                            WHERE restaurant_email = ?
+                            ''', (session.get('restaurant_email'),))
+            areas = cursor.fetchall()
+            connection.close()
+            return render_template('verwaltung.html', areas=areas)
