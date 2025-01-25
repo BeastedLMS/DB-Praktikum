@@ -182,8 +182,8 @@ def signupGeschaeft():
     return render_template("signupGeschaeft.html")
 
 @views.route('/homeRestaurantNeu')
-def homeRestaurant():                                   #Entweder homeRestaurantNeu als ersatz für homeRestaurant und überall einfügen
-    return render_template('homeRestaurantNeu.html')    #oder homeRestaurantNeu zu homeRestaurant umbenennen
+def homeRestaurant():                                   
+    return render_template('homeRestaurantNeu.html')
 
 @views.route('/homeKunde')
 def homeKunde():
@@ -215,23 +215,47 @@ def warenkorb():
 def menue():
     return render_template("menue.html")
 
-@views.route('/verwaltung')
+@views.route('/verwaltung', methods=['GET', 'POST'])
 def verwaltung():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
 
     if request.method == 'POST':
-        for day in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']:
-            opening_time = request.form.get(f'{day}_opening_time', '')
-            closing_time = request.form.get(f'{day}_closing_time', '')
-            restaurant_email = 'restaurant@example.com'  # Beispiel
 
-            # Update der Datenbank für jeden Tag
-            cursor.execute('''
-                UPDATE oeffnungszeiten
-                SET opening_time = ?, closing_time = ?
-                WHERE restaurant_email = ? AND day_of_the_week = ?
-            ''', (opening_time, closing_time, restaurant_email, day))
+        restaurant_email = session.get('restaurant_email') # Hier wird die E-Mail-Adresse des Restaurants aus der Session geholt
+
+                    # Überprüfen, ob bereits Öffnungszeiten für das Restaurant in der Datenbank existieren
+        cursor.execute('''
+                        SELECT * FROM oeffnungszeiten WHERE restaurant_email = ?
+                        ''', (restaurant_email,))
+        ex_check = cursor.fetchone()
+        
+        
+            
+        # Wenn keine Öffnungszeiten existieren, werden sie in die Datenbank eingefügt
+        if not ex_check:
+                
+                for day in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']:
+                    opening_time = request.form.get(f'{day}_opening_time', '')
+                    closing_time = request.form.get(f'{day}_closing_time', '')
+
+                    cursor.execute('''
+                                    INSERT INTO oeffnungszeiten (restaurant_email, day_of_the_week, opening_time, closing_time)
+                                    VALUES (?, ?, ?, ?)
+                                    ''', (restaurant_email, day, opening_time, closing_time))
+            
+        # Wenn bereits Öffnungszeiten existieren, werden sie aktualisiert
+        else:
+                for day in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']:
+                    opening_time = request.form.get(f'{day}_opening_time', '')
+                    closing_time = request.form.get(f'{day}_closing_time', '')
+
+                    cursor.execute('''
+                                    UPDATE oeffnungszeiten
+                                    SET opening_time = ?, closing_time = ?
+                                    WHERE restaurant_email = ? AND day_of_the_week = ?
+                     ''', (opening_time, closing_time, restaurant_email, day))
+                    
         connection.commit()
 
     # Holen der aktuellen Öffnungszeiten aus der Datenbank
