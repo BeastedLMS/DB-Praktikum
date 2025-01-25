@@ -1,66 +1,42 @@
-{% extends "baseRestaurant.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-3">
-      <div class="card" style="width: 250px">
-        <img src="static\speisekarte.png" class="card-img-top" alt="Menü" />
-        <div class="card-body justify-content-center">
-          <h5 class="card-title">Menü</h5>
-          <a href="/menu" class="btn btn-warning">Zur Speisekarte</a>
-        </div>
+{% extends "baseRestaurant.html" %} {% block title %}Home{% endblock %} {% block
+content %}
+
+<div class="row">
+  <div class="col-md-3 position-fixed">
+    <!-- Static content -->
+    <div class="card" style="width: 160px; background-color: #f9f9f9">
+      <img src="static/speisekarte.png" class="card-img-top" alt="Menü" />
+      <div class="card-body justify-content-center">
+        <h5 class="card-title">Menü</h5>
+        <a href="/menue" class="btn btn-warning btn-sm">Zur Speisekarte</a>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="card" style="width: 250px">
-        <img src="static\post.png" class="card-img-top" alt="Bestellungen" />
-        <div class="card-body">
-          <h5 class="card-title">Bestellungen</h5>
-          <a href="/orders" class="btn btn-warning">Jetzt ansehen</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card" style="width: 250px">
-        <img
-          src="static\schild-offnen.png"
-          class="card-img-top"
-          alt="Öffnungszeiten"
-        />
-        <div class="card-body">
-          <h5 class="card-title">Öffnungszeiten</h5>
-          <a href="/hours" class="btn btn-warning">Jetzt bearbeiten</a>
-        </div>
+    <div
+      class="card"
+      style="width: 160px; margin-top: 20px; background-color: #f9f9f9"
+    >
+      <img src="static/verwaltung.png" class="card-img-top" alt="Verwaltung" />
+      <div class="card-body justify-content-center">
+        <h5 class="card-title">Verwaltung</h5>
+        <a href="/verwaltung" class="btn btn-warning btn-sm">Zur Verwaltung</a>
       </div>
     </div>
   </div>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-3">
-      <div class="card" style="width: 250px">
-        <img
-          src="static\maps-and-location.png"
-          class="card-img-top"
-          alt="Lieferradius"
-        />
-        <div class="card-body">
-          <h5 class="card-title">Lieferradius</h5>
-          <a href="/Lieferradius" class="btn btn-warning">Jetzt bearbeiten</a>
-        </div>
+  <div class="col-md-9 offset-md-3" style="height: 100vh; overflow-y: scroll">
+    <!-- Scrolling content -->
+    <div class="border p-3 mt-5" style="background-color: #f9f9f9">
+      <h1>Willkommen zurück</h1>
+      <h2 class="mt-5">Bestellhistorie</h2>
+      <div class="border p-3 mt-4" style="background-color: white">
+        <h3 class="mt-5">Neue Bestellungen</h3>
+        <!--Hier kommen neue Bestellungen hin-->
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card" style="width: 250px">
-        <img
-          src="static\money-management.png"
-          class="card-img-top"
-          alt="Guthaben"
-        />
-        <div class="card-body">
-          <h5 class="card-title">Guthaben</h5>
-          <a href="/creditBalance" class="btn btn-warning">Jetzt ansehen</a>
-        </div>
+      <div class="border p-3 mt-4" style="background-color: white">
+        <h3>Alte Bestellungen</h3>
+        <!-- hier kommen alte Bestellungen hin -->
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

@@ -181,9 +181,9 @@ def signupGeschaeft():
     
     return render_template("signupGeschaeft.html")
 
-@views.route('/homeRestaurantNeu')
+@views.route('/homeRestaurant')
 def homeRestaurant():                                   
-    return render_template('homeRestaurantNeu.html')
+    return render_template('homeRestaurant.html')
 
 @views.route('/homeKunde')
 def homeKunde():
