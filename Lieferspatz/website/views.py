@@ -262,8 +262,8 @@ def verwaltung():
     cursor.execute('''
         SELECT day_of_the_week, opening_time, closing_time
         FROM oeffnungszeiten
-        WHERE restaurant_email = 'restaurant@example.com'
-    ''')
+        WHERE restaurant_email = ?
+    ''', (session.get('restaurant_email'),))
     opening_hours = cursor.fetchall()
     connection.close()
 
