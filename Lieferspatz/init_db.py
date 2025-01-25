@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT,
     city TEXT,
     zip TEXT,
-    guthaben NUMERIC(10,2),
+    guthaben REAL,
     PRIMARY KEY(email)
     )
-''')
+''')    #Guthaben später nochmal als numeric(10,2) testen
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS restaurants (
@@ -28,10 +28,10 @@ CREATE TABLE IF NOT EXISTS restaurants (
     zip TEXT,
     caption TEXT,
     bild TEXT,
-    guthaben NUMERIC(10,2),
+    guthaben REAL,
     PRIMARY KEY(email)
     )
-''')
+''')    #Guthaben später nochmal als numeric(10,2) testen
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS menue (
