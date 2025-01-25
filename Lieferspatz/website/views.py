@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for
+from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for, session
 import sqlite3
 
 views = Blueprint('views', __name__)
@@ -16,41 +16,90 @@ def login():
         email_eingabe = request.form.get('email')
         password_eingabe = request.form.get('password')
         
+        #Kunde login
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
                        select password from users where email = ?
                        ''', (email_eingabe,))
         result = cursor.fetchone()
-        connection.close()
 
         if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
             #Sessiondaten für Kunde speichern
+            cursor.execute('''
+                           SELECT first_name, last_name, email, address, city, zip, guthaben FROM users WHERE email = ?
+                           ''')
+            rows = cursor.fetchall()
+
+            session['user_name'] = rows[0][0] + " " + rows[0][1]
+            session['user_email'] = rows[0][2]
+            session['user_address'] = rows[0][3]
+            session['user_city'] = rows[0][4]
+            session['user_zip'] = rows[0][5]
+            session['user_guthaben'] = rows[0][6]
+            #Sessiondaten für Kunde speichern
+            connection.close()
             return redirect(url_for('views.homeKunde')) 
+        connection.close()
+
+
+        #Restaurant Login
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
                        select password from restaurants where email = ?
                        ''', (email_eingabe,))
         result = cursor.fetchone()
-        connection.close()
 
         if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
             #Sessiondaten für Restaurant speichern
+            cursor.execute('''
+                           SELECT restaurant_name, email, address, city, zip, caption, bild, guthaben FROM restaurants WHERE email = ?
+                           ''')
+            rows = cursor.fetchall()
+
+            session['restaurant_name'] = rows[0][0]
+            session['restaurant_email'] = rows[0][1]
+            session['restaurant_address'] = rows[0][2]
+            session['restaurant_city'] = rows[0][3]
+            session['restaurant_zip'] = rows[0][4]
+            session['restaurant_caption'] = rows[0][5]
+            session['restaurant_bild'] = rows[0][6]
+            session['restaurant_guthaben'] = rows[0][7]
+            #Sessiondaten für Restaurant speichern
+            connection.close()
             return redirect(url_for('views.homeRestaurant'))
-        
+        connection.close()
         flash('Ungültige E-Mail oder Passwort. Bitte versuche es erneut.', 'error')
 
     return render_template("login.html", text="Testing", user="Name", boolean=True)
 
+#Um sessiondaten des Users zu löschen und auf die Startseite zu leiten
+@views.route('/logoutUser')
+def logout():
+    session.pop('user_name', None)
+    session.pop('user_email', None)
+    session.pop('user_address', None)
+    session.pop('user_city', None)
+    session.pop('user_zip', None)
+    session.pop('user_guthaben', None)
+    return redirect(url_for('views.home'))
 
-#@views.route('/logout')
-#def logout():
-#Um sessiondaten zu löschen und auf die Startseite zu leiten
-#Muss für Kunde und Restaurant getrennt implementiert werden
-#Wir benutzt pop() um die Sessiondaten zu löschen
+#Um Sessiondaten des Restaurants zu löschen und auf die Startseite zu leiten
+@views.route('/logoutRestaurant')
+def logout():
+    session.pop('restaurant_name', None)
+    session.pop('restaurant_email', None)
+    session.pop('restaurant_address', None)
+    session.pop('restaurant_city', None)
+    session.pop('restaurant_zip', None)
+    session.pop('restaurant_caption', None)
+    session.pop('restaurant_bild', None)
+    session.pop('restaurant_guthaben', None)
+    return redirect(url_for('views.home'))
+
 
 @views.route('/signupKunde', methods=['GET', 'POST'])
 def signupKunde():
