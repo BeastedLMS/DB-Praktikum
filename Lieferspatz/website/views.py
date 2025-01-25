@@ -211,9 +211,40 @@ def bestellhistorie():
 def warenkorb():
     return render_template("warenkorb.html")
 
-@views.route('/menue')
+@views.route('/menue', methods=['GET', 'POST'])
 def menue():
-    return render_template("menue.html")
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+    if request.method == 'POST':
+        item_id = request.form.get('item_id')
+        name = request.form.get('name')
+        price = request.form.get('price')
+        restaurant_email = session.get('restaurant_email')
+
+        if item_id:  # Vorhandenen Artikel aktualisieren
+            cursor.execute('''
+                           UPDATE menue
+                           SET item_name = ?, price = ?
+                           WHERE item_id = ? AND restaurant_email = ?
+                           ''', (name, price, item_id, restaurant_email))
+        else:  # Neuen Artikel hinzufügen
+            cursor.execute('''
+                           INSERT INTO menue (item_name, price, restaurant_email)
+                           VALUES (?, ?, ?)
+                           ''', (name, price, restaurant_email))
+
+        connection.commit()
+
+    cursor.execute('''
+                   SELECT item_id, item_name, price FROM menue WHERE restaurant_email = ?
+                   ''', (session.get('restaurant_email'),))
+    items = cursor.fetchall()
+    connection.close()
+
+    menu_items = [{"id": row[0], "name": row[1], "price": row[2]} for row in items]
+
+    return render_template("menue.html", items=menu_items)
 
 @views.route('/verwaltung', methods=['GET', 'POST'])
 def verwaltung():

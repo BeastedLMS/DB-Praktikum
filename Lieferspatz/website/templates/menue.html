@@ -1,38 +1,57 @@
-{% extends "baseRestaurant.html" %} {% block title %}Speisekarte{% endblock %}
-{% block content %}
+{% extends "baseRestaurant.html" %} 
+{% block title %}Speisekarte{% endblock %}
 
+{% block content %}
 <div class="container mt-5">
   <h2 class="mb-3">Speisekarte</h2>
-  <div class="row row-cols-auto">
-    <!-- {% for item in items %} -->
-    <div class="col-md-3">
-      <div class="card small-card mb-3" style="background-color: #f9f9f9">
-        <!-- {% if item.image %} -->
-        <!-- <img
-          src="{{ url_for('static', filename='path/to/save/images/' ~ item.image) }}"
-          class="card-img-top"
-          alt="{{ item.name }}"
-        /> -->
-        <!-- {% else %} -->
-        <img src="static\food.jpg" class="card-img-top" alt="Dummy Foto" />
-        <!-- {% endif %} -->
-        <div class="card-body">
-          <h5 class="card-title">Name</h5>
-          <!-- <h5 class="card-title">{{ item.name }}</h5> -->
-          <p class="card-text">Description</p>
-          <!-- <p class="card-text">{{ item.description}}</p> -->
-          <p class="card-text"><strong>Preis:</strong> 00€</p>
-          <!-- <p class="card-text"><strong>Preis:</strong> €{{ item.price }}</p> -->
-          <button class="btn btn-warning" onclick="editItem('dummy-id')">
-            Bearbeiten
-          </button>
-          <button class="btn btn-danger" onclick="removeItem('dummy-id')">
-            Entfernen
-          </button>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    {% for item in items %}
+    <div class="col">
+      <div class="card small-card h-100" style="background-color: #f9f9f9">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <p class="card-text"><strong>Preis:</strong> €{{ item.price }}</p>
+          <div class="mt-auto">
+            <button class="btn btn-warning w-100 mb-2" onclick="Bearbeiten('{{ item.id }}', '{{ item.name }}', '{{ item.price }}')">
+              Bearbeiten
+            </button>
+            <button class="btn btn-danger w-100" onclick="Entfernen('{{ item.id }}')">
+              Entfernen
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <!-- {% endfor %} -->
+    {% endfor %}
   </div>
+
+  <h3 class="mt-5">Neues Gericht hinzufügen / Gericht bearbeiten</h3>
+  <form method="POST" action="{{ url_for('views.menue') }}">
+    <input type="hidden" id="item_id" name="item_id">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Preis</label>
+      <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </form>
 </div>
+
+<script>
+function Bearbeiten(id, name, price) {
+  document.getElementById('item_id').value = id;
+  document.getElementById('name').value = name;
+  document.getElementById('price').value = price;
+}
+
+"Das entfernen funktioniert noch nicht"
+function Entfernen(id) { 
+  document.getElementById('item_id').value = '';
+  document.getElementById('name').value = '';
+  document.getElementById('price').value = '';
+}
+</script>
 {% endblock %}
