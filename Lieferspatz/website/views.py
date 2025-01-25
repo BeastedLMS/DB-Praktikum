@@ -29,15 +29,15 @@ def login():
             #Sessiondaten für Kunde speichern
             cursor.execute('''
                            SELECT first_name, last_name, email, address, city, zip, guthaben FROM users WHERE email = ?
-                           ''')
-            rows = cursor.fetchall()
+                           ''', (email_eingabe,))
+            rowsKunde = cursor.fetchall()
 
-            session['user_name'] = rows[0][0] + " " + rows[0][1]
-            session['user_email'] = rows[0][2]
-            session['user_address'] = rows[0][3]
-            session['user_city'] = rows[0][4]
-            session['user_zip'] = rows[0][5]
-            session['user_guthaben'] = rows[0][6]
+            session['user_name'] = rowsKunde[0][0] + " " + rowsKunde[0][1]
+            session['user_email'] = rowsKunde[0][2]
+            session['user_address'] = rowsKunde[0][3]
+            session['user_city'] = rowsKunde[0][4]
+            session['user_zip'] = rowsKunde[0][5]
+            session['user_guthaben'] = rowsKunde[0][6]
             #Sessiondaten für Kunde speichern
             connection.close()
             return redirect(url_for('views.homeKunde')) 
@@ -57,17 +57,17 @@ def login():
             #Sessiondaten für Restaurant speichern
             cursor.execute('''
                            SELECT restaurant_name, email, address, city, zip, caption, bild, guthaben FROM restaurants WHERE email = ?
-                           ''')
-            rows = cursor.fetchall()
+                           ''', (email_eingabe,))
+            rowsRestaurant = cursor.fetchall()
 
-            session['restaurant_name'] = rows[0][0]
-            session['restaurant_email'] = rows[0][1]
-            session['restaurant_address'] = rows[0][2]
-            session['restaurant_city'] = rows[0][3]
-            session['restaurant_zip'] = rows[0][4]
-            session['restaurant_caption'] = rows[0][5]
-            session['restaurant_bild'] = rows[0][6]
-            session['restaurant_guthaben'] = rows[0][7]
+            session['restaurant_name'] = rowsRestaurant[0][0]
+            session['restaurant_email'] = rowsRestaurant[0][1]
+            session['restaurant_address'] = rowsRestaurant[0][2]
+            session['restaurant_city'] = rowsRestaurant[0][3]
+            session['restaurant_zip'] = rowsRestaurant[0][4]
+            session['restaurant_caption'] = rowsRestaurant[0][5]
+            session['restaurant_bild'] = rowsRestaurant[0][6]
+            session['restaurant_guthaben'] = rowsRestaurant[0][7]
             #Sessiondaten für Restaurant speichern
             connection.close()
             return redirect(url_for('views.homeRestaurant'))
@@ -77,8 +77,9 @@ def login():
     return render_template("login.html", text="Testing", user="Name", boolean=True)
 
 #Um sessiondaten des Users zu löschen und auf die Startseite zu leiten
-@views.route('/logoutUser')
-def logout():
+
+@views.route('/logoutUser', methods=['GET', 'POST'])
+def logoutUser():
     session.pop('user_name', None)
     session.pop('user_email', None)
     session.pop('user_address', None)
@@ -88,8 +89,8 @@ def logout():
     return redirect(url_for('views.home'))
 
 #Um Sessiondaten des Restaurants zu löschen und auf die Startseite zu leiten
-@views.route('/logoutRestaurant')
-def logout():
+@views.route('/logoutRestaurant', methods=['GET', 'POST'])
+def logoutRestaurant():
     session.pop('restaurant_name', None)
     session.pop('restaurant_email', None)
     session.pop('restaurant_address', None)
@@ -99,7 +100,6 @@ def logout():
     session.pop('restaurant_bild', None)
     session.pop('restaurant_guthaben', None)
     return redirect(url_for('views.home'))
-
 
 @views.route('/signupKunde', methods=['GET', 'POST'])
 def signupKunde():
