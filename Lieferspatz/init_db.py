@@ -70,5 +70,22 @@ create table IF NOT EXISTS delivery_areas (
     )         
 ''')
 
+# tabelle zum testen der bestellungen Seite in homeRestaurant
+cursor.execute('''
+create table IF NOT EXISTS orders (
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    restaurant_email TEXT NOT NULL,
+    items TEXT NOT NULL,
+    total_price REAL NOT NULL,
+    delivery_address TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time TEXT NOT NULL,
+    status TEXT NOT NULL,
+    FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+)
+''')
+
 connection.commit()
 connection.close()

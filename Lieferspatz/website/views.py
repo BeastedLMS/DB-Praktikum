@@ -182,8 +182,38 @@ def signupGeschaeft():
     return render_template("signupGeschaeft.html")
 
 @views.route('/homeRestaurant')
-def homeRestaurant():                                   
-    return render_template('homeRestaurant.html')
+def homeRestaurant():     
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+
+    # # Testdaten für Bestellungen
+    # cursor.execute('''
+    #     INSERT INTO orders (restaurant_email, items, total_price, delivery_address, date, time, status)
+    #     VALUES 
+    #     ('admin@1', 'Pizza, Cola', 20.50, 'Musterstraße 123, Musterstadt', '2025-01-25', '18:30', 'new'),
+    #     ('admin@1', 'Burger, Pommes', 15.00, 'Beispielstraße 45, Teststadt', '2025-01-20', '17:00', 'old')
+    # ''')
+    # connection.commit()
+
+
+    # neue Bestellunguen aus der Datenbank holen
+    cursor.execute('''
+        SELECT order_id, items, total_price, delivery_address, date, time
+        FROM orders
+        WHERE status = 'new'
+    ''')
+    new_orders = cursor.fetchall()
+
+    # alte Bestellungen aus der Datenbank holen
+    cursor.execute('''
+        SELECT order_id, items, total_price, delivery_address, date, time
+        FROM orders
+        WHERE status = 'old'
+    ''')
+    old_orders = cursor.fetchall()
+
+    connection.close()                              
+    return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders)
 
 @views.route('/homeKunde')
 def homeKunde():

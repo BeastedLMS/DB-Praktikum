@@ -30,10 +30,58 @@ content %}
       <div class="border p-3 mt-4" style="background-color: white">
         <h3 class="mt-5">Neue Bestellungen</h3>
         <!--Hier kommen neue Bestellungen hin-->
+        <div class="row">
+          {% for order in new_orders %}
+          <div class="col-md-4">
+            <div class="card mb-4" style="background-color: rgb(138, 225, 174)">
+              <div class="card-body">
+                <h5 class="card-title">Bestellung #{{ order[0] }}</h5>
+                <p class="card-text">
+                  <strong>Artikel:</strong> {{ order[1] }}
+                </p>
+                <p class="card-text">
+                  <strong>Gesamtpreis:</strong> {{ order[2] }} €
+                </p>
+                <p class="card-text">
+                  <strong>Lieferadresse:</strong> {{ order[3] }}
+                </p>
+                <p class="card-text"><strong>Datum:</strong> {{ order[4] }}</p>
+                <p class="card-text">
+                  <strong>Uhrzeit:</strong> {{ order[5] }}
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
       <div class="border p-3 mt-4" style="background-color: white">
         <h3>Alte Bestellungen</h3>
         <!-- hier kommen alte Bestellungen hin -->
+        <div class="row">
+          {% for order in old_orders %}
+          <div class="col-md-4">
+            <div class="card mb-4" style="background-color: rgb(250, 239, 225)">
+              <div class="card-body">
+                <h5 class="card-title">Bestellung #{{ order[0] }}</h5>
+                <p class="card-text">
+                  <strong>Artikel:</strong> {{ order[1] }}
+                </p>
+                <p class="card-text">
+                  <strong>Gesamtpreis:</strong> {{ order[2] }} €
+                </p>
+                <p class="card-text">
+                  <strong>Lieferadresse:</strong> {{ order[3] }}
+                </p>
+                <p class="card-text"><strong>Datum:</strong> {{ order[4] }}</p>
+                <p class="card-text">
+                  <strong>Uhrzeit:</strong> {{ order[5] }}
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
