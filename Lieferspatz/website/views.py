@@ -316,10 +316,17 @@ def verwaltung():
                                     SET opening_time = ?, closing_time = ?
                                     WHERE restaurant_email = ? AND day_of_the_week = ?
                      ''', (opening_time, closing_time, restaurant_email, day))
-                    
+                   
         connection.commit()
 
-        
+
+    # Holen der aktuellen Liefergebiete aus der Datenbank
+    cursor.execute('''
+                            SELECT da_id, zip
+                            FROM delivery_areas
+                            WHERE restaurant_email = ?
+                            ''', (session.get('restaurant_email'),))
+    areas = cursor.fetchall()    
 
     # Holen der aktuellen Öffnungszeiten aus der Datenbank
     cursor.execute('''
@@ -334,7 +341,7 @@ def verwaltung():
     opening_hours_dict = {day: {'opening_time': opening_time, 'closing_time': closing_time}
                           for day, opening_time, closing_time in opening_hours}
 
-    return render_template('verwaltung.html', opening_hours=opening_hours_dict)
+    return render_template('verwaltung.html', opening_hours=opening_hours_dict, areas=areas)
 
 
 @views.route('/remove_item/<int:item_id>', methods=['POST'])
@@ -369,26 +376,13 @@ def neue_plz():
     
 @app.route('/delete_plz/<int:area_id>', methods=['POST'])
 def delete_plz(area_id):
-    if request.method == 'POST':
+        restaurant_email = session.get('restaurant_email')
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
         cursor.execute('''
                         DELETE FROM delivery_areas
-                        WHERE da_id = ?
-                        ''', (area_id,))
+                        WHERE da_id = ? AND restaurant_email = ?
+                        ''', (area_id, restaurant_email))
         connection.commit()
         connection.close()
         return redirect(url_for('views.verwaltung'))
-    
-@views.route('/show_delivery_area')
-def show_delivery_area():
-            connection = sqlite3.connect('database.db')
-            cursor = connection.cursor()
-            cursor.execute('''
-                            SELECT da_id, zip
-                            FROM delivery_areas
-                            WHERE restaurant_email = ?
-                            ''', (session.get('restaurant_email'),))
-            areas = cursor.fetchall()
-            connection.close()
-            return render_template('verwaltung.html', areas=areas)
