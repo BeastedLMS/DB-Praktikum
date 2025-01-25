@@ -26,8 +26,8 @@ def login():
 
         if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
-            return redirect(url_for('views.homeKunde')) #Route zur Hauptseite des Kunden einfügen
-
+            #Sessiondaten für Kunde speichern
+            return redirect(url_for('views.homeKunde')) 
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute('''
@@ -38,12 +38,19 @@ def login():
 
         if result and password_eingabe == result[0]:
             flash('Sie sind eingeloggt!', category='success')
-            return redirect(url_for('views.homeRestaurant')) #Route zur Hauptseite des Restaurants einfügen
+            #Sessiondaten für Restaurant speichern
+            return redirect(url_for('views.homeRestaurant'))
         
         flash('Ungültige E-Mail oder Passwort. Bitte versuche es erneut.', 'error')
 
     return render_template("login.html", text="Testing", user="Name", boolean=True)
 
+
+#@views.route('/logout')
+#def logout():
+#Um sessiondaten zu löschen und auf die Startseite zu leiten
+#Muss für Kunde und Restaurant getrennt implementiert werden
+#Wir benutzt pop() um die Sessiondaten zu löschen
 
 @views.route('/signupKunde', methods=['GET', 'POST'])
 def signupKunde():
@@ -126,8 +133,8 @@ def signupGeschaeft():
     return render_template("signupGeschaeft.html")
 
 @views.route('/homeRestaurantNeu')
-def homeRestaurant():
-    return render_template('homeRestaurantNeu.html')
+def homeRestaurant():                                   #Entweder homeRestaurantNeu als ersatz für homeRestaurant und überall einfügen
+    return render_template('homeRestaurantNeu.html')    #oder homeRestaurantNeu zu homeRestaurant umbenennen
 
 @views.route('/homeKunde')
 def homeKunde():
