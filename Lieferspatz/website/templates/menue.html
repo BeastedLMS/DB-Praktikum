@@ -14,10 +14,9 @@
           <div class="mt-auto">
             <button class="btn btn-warning w-100 mb-2" onclick="Bearbeiten('{{ item.id }}', '{{ item.name }}', '{{ item.price }}')">
               Bearbeiten
-            </button>
-            <form action="/remove_item/{{ item.id }}" method="POST" style="display:inline;">
-              <button type="submit">Entfernen</button>
-          </form>
+              <form action="/remove_item/{{ item.id }}" method="POST" style="display:inline;">
+                <button class="btn btn-danger w-100" type="submit">Entfernen</button>
+            </form>
           </div>
         </div>
       </div>
