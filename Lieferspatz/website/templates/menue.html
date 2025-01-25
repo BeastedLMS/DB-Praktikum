@@ -15,9 +15,9 @@
             <button class="btn btn-warning w-100 mb-2" onclick="Bearbeiten('{{ item.id }}', '{{ item.name }}', '{{ item.price }}')">
               Bearbeiten
             </button>
-            <button class="btn btn-danger w-100" onclick="Entfernen('{{ item.id }}')">
-              Entfernen
-            </button>
+            <form action="/remove_item/{{ item.id }}" method="POST" style="display:inline;">
+              <button type="submit">Entfernen</button>
+          </form>
           </div>
         </div>
       </div>

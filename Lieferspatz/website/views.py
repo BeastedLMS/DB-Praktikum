@@ -307,6 +307,20 @@ def verwaltung():
     return render_template('verwaltung.html', opening_hours=opening_hours_dict)
 
 
+@views.route('/remove_item/<int:item_id>', methods=['POST'])
+def remove_item(item_id):
+    if request.method == 'POST':
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute('''
+                        DELETE FROM menue
+                        WHERE item_id = ?
+                        ''', (item_id,))
+        connection.commit()
+        connection.close()
+        return redirect(url_for("views.menue"))
+
+
 
 @views.route('/neue_plz', methods=['POST'])
 def neue_plz():
