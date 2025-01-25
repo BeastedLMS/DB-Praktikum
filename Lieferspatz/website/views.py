@@ -335,7 +335,7 @@ def neue_plz():
                         ''', (restaurant_email, plz))
         connection.commit()
         connection.close()
-        return redirect(url_for('views.show_delivery_area'))
+        return redirect(url_for('views.verwaltung'))
     
 @app.route('/delete_plz/<int:area_id>', methods=['POST'])
 def delete_plz(area_id):
@@ -348,11 +348,10 @@ def delete_plz(area_id):
                         ''', (area_id,))
         connection.commit()
         connection.close()
-        return redirect(url_for('views.show_delivery_area'))
+        return redirect(url_for('views.verwaltung'))
     
-@views.route('/show_delivery_area', methods=['GET'])
+@views.route('/show_delivery_area')
 def show_delivery_area():
-    if request.method == 'get':
             connection = sqlite3.connect('database.db')
             cursor = connection.cursor()
             cursor.execute('''
