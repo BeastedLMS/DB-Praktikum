@@ -374,15 +374,14 @@ def neue_plz():
         connection.close()
         return redirect(url_for('views.verwaltung'))
     
-@app.route('/delete_plz/<int:area_id>', methods=['POST'])
+@views.route('/delete_plz/<int:area_id>', methods=['POST'])
 def delete_plz(area_id):
-        restaurant_email = session.get('restaurant_email')
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
         cursor.execute('''
                         DELETE FROM delivery_areas
-                        WHERE da_id = ? AND restaurant_email = ?
-                        ''', (area_id, restaurant_email))
+                        WHERE da_id = ?
+                        ''', (area_id,))
         connection.commit()
         connection.close()
         return redirect(url_for('views.verwaltung'))
