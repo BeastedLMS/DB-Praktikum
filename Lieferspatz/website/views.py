@@ -217,11 +217,15 @@ def homeRestaurant():
 
 @views.route('/homeKunde')
 def homeKunde():
+    user_zip = session.get('user_zip')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
-                   SELECT restaurant_name, caption, address, city, zip FROM restaurants
-                   ''')
+                    SELECT DISTINCT restaurants.restaurant_name, restaurants.caption, restaurants.address, restaurants.city, restaurants.zip
+                    FROM restaurants
+                    JOIN delivery_areas ON restaurants.email = delivery_areas.restaurant_email
+                    WHERE delivery_areas.zip = ?
+                    ''', (user_zip,))
     restaurantListe = cursor.fetchall()
     connection.close()
 
@@ -364,16 +368,37 @@ def neue_plz():
     if request.method ==  'POST':
         restaurant_email = session.get('restaurant_email')
         plz = request.form.get('plz')
+
+        # Überprüfen, ob eine PLZ eingegeben wurde
+        if not plz: 
+            flash("Bitte geben Sie eine PLZ an.", "error")
+            return redirect(url_for('views.verwaltung'))
+
+        # Überprüfen ob die PLZ bereits in der Datenbank existiert
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
         cursor.execute('''
-                        INSERT INTO delivery_areas (restaurant_email, zip)
-                        VALUES (?, ?)
+                        SELECT 1
+                        FROM delivery_areas
+                        WHERE restaurant_email = ? AND zip = ?
                         ''', (restaurant_email, plz))
-        connection.commit()
+        ex_check = cursor.fetchone()
+
+        if ex_check:    #Wenn die PLZ bereits in der Datenbank existiert, wird eine Fehlermeldung ausgegeben
+            flash(f"Die PLZ {plz} ist bereits in Ihrer Lieferzone vorhanden.", "warning")
+
+        else: #Wenn die PLZ noch nicht in der Datenbank existiert, wird sie hinzugefügt
+            cursor.execute('''
+                            INSERT INTO delivery_areas (restaurant_email, zip)
+                            VALUES (?, ?)
+                            ''', (restaurant_email, plz))
+            flash(f"Die PLZ {plz} wurde erfolgreich hinzugefügt.", "success")
+            connection.commit()
+        
         connection.close()
         return redirect(url_for('views.verwaltung'))
     
+
 @views.route('/delete_plz', methods=['POST'])
 def delete_plz():
         restaurant_email = session.get('restaurant_email') # Hier wird die E-Mail-Adresse des Restaurants aus der Session geholt
