@@ -414,3 +414,22 @@ def delete_plz():
         connection.close()
 
         return redirect(url_for('views.verwaltung'))
+
+
+#Um Informationen des Restaurants auf die Restaurantseite aus der Kundenanticht zu bringen, nachdem bei homeKunde auf ein Restaurant geklickt wurde
+#Noch nicht ganz fertig
+#@views.route('/restaurant_details/<restaurant_email>')
+#def restaurant_details (restaurant_email):
+#    connection = sqlite3.connect("database.db")
+#    cursor = connection.cursor()
+#    cursor.execute('''
+#                    SELECT restaurant_name, caption, address, city, zip, bild
+#                    FROM restaurants
+#                    WHERE email = ?
+#                    ''', (restaurant_email,))
+#    restaurant = cursor.fetchone()
+#    connection.close()
+#
+#    restaurant_details = {"name": restaurant[0], "beschreibung": restaurant[1], "adresse": restaurant[2], "stadt": restaurant[3], "plz": restaurant[4], "bild": restaurant[5]}
+#
+#    return render_template("bestellen.html", restaurant=restaurant_details)
