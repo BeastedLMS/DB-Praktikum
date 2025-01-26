@@ -36,14 +36,16 @@ CREATE TABLE IF NOT EXISTS restaurants (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS menue (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    item_name TEXT,
-    price NUMERIC(10,2) NOT NULL,
+    item_name TEXT NOT NULL,
+    item_caption TEXT NOT NULL,
+    price REAL NOT NULL,
     restaurant_email TEXT,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
         ON DELETE CASCADE
         ON UPDATE CASCADE
     )
 ''')
+
 
 
 cursor.execute('''
@@ -61,9 +63,9 @@ CREATE TABLE IF NOT EXISTS oeffnungszeiten (
 
 cursor.execute('''
 create table IF NOT EXISTS delivery_areas (
-    da_id INTEGER PRIMARY KEY AUTOINCREMENT,
     restaurant_email TEXT NOT NULL,
     zip TEXT NOT NULL,
+    Primary Key(restaurant_email, zip),
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
         ON DELETE CASCADE
         ON UPDATE CASCADE          

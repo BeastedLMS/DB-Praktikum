@@ -82,10 +82,11 @@ block content %}
         <br />
         <!-- Formular zum Löschen der jeweiligen PLZ -->
         <form
-          action="/delete_plz/{{ area[0] }}"
+          action="/delete_plz"
           method="POST"
           style="display: inline"
         >
+          <input type="hidden" name="plz" value="{{ area[1] }}" />
           <button type="submit">Entfernen</button>
         </form>
       </li>

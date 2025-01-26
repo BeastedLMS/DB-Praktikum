@@ -322,7 +322,7 @@ def verwaltung():
 
     # Holen der aktuellen Liefergebiete aus der Datenbank
     cursor.execute('''
-                            SELECT da_id, zip
+                            SELECT restaurant_email, zip
                             FROM delivery_areas
                             WHERE restaurant_email = ?
                             ''', (session.get('restaurant_email'),))
@@ -374,14 +374,18 @@ def neue_plz():
         connection.close()
         return redirect(url_for('views.verwaltung'))
     
-@views.route('/delete_plz/<int:area_id>', methods=['POST'])
-def delete_plz(area_id):
+@views.route('/delete_plz', methods=['POST'])
+def delete_plz():
+        restaurant_email = session.get('restaurant_email') # Hier wird die E-Mail-Adresse des Restaurants aus der Session geholt
+        plz = request.form.get('plz') # Hier wird die PLZ aus dem Formular geholt
+
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
         cursor.execute('''
                         DELETE FROM delivery_areas
-                        WHERE da_id = ?
-                        ''', (area_id,))
+                        WHERE restaurant_email = ? AND zip = ?
+                        ''', (restaurant_email, plz))
         connection.commit()
         connection.close()
+
         return redirect(url_for('views.verwaltung'))
