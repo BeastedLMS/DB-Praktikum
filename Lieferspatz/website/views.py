@@ -251,6 +251,13 @@ def bestellungZusammenstellen():
                         WHERE restaurant_email = ?
                         ''', (restaurant_email,))
     opening_hours = cursor.fetchall()
+
+    cursor.execute('''
+                        SELECT item_name, caption, price
+                        FROM menue
+                        WHERE restaurant_email = ?
+                        ''', (restaurant_email,))
+    menu_items = cursor.fetchall()
     connection.close()
 
     restaurant_details = {
@@ -263,7 +270,7 @@ def bestellungZusammenstellen():
         "oeffnungszeiten": {day: {'opening_time': opening_time, 'closing_time': closing_time} for day, opening_time, closing_time in opening_hours}
     }
     
-    return render_template("bestellungZusammenstellen.html", restaurant=restaurant_details)
+    return render_template("bestellungZusammenstellen.html", restaurant=restaurant_details, items=menu_items)
 
 @views.route('/bestellhistorie')
 def bestellhistorie():

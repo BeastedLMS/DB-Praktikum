@@ -1,7 +1,7 @@
 {% extends "baseKunde.html" %}{% block title %}Restaurants{% endblock %}
 
 {% block content %}
-<h1 class="mt-5">Restaurants</h1> 
+<h1 class="mt-5">Willkommen zurück, {{session['user_name']}} <br><br>Restaurants</h1> 
 <div class="list-group">
     {% for restaurant in restaurants %}
     <form action="/bestellungZusammenstellen" method="POST" style="cursor: pointer;" 
