@@ -538,13 +538,13 @@ def add_to_order():
 
     return redirect(url_for('views.bestellungZusammenstellen', restaurant_email=restaurant_email))
 
-@views.route('/remove_item', methods=['POST'])
-def remove_item_from_order():
-    remove_count = int(request.form.get('remove_count'))
-    item_name = request.form.get('item_name')
-    order_id = session.get('order_id')
+@views.route('/remove_item_order', methods=['POST'])
+def remove_item_order():
+    item_name = request.form.get("item_name")  # Namen des Items
+    remove_count = int(request.form.get("remove_count"))  # Menge
+    order_id = session.get('order_id')  # Bestellungs-ID
 
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
     #Menge des Items holen
@@ -555,26 +555,30 @@ def remove_item_from_order():
                     ''', (order_id, item_name))
     item = cursor.fetchone()
 
-    #Gesamtpreis der Bestellung aktualisieren
-    cursor.execute('''
+
+    if item:
+        current_quantity = item[0]
+        new_quantity = current_quantity - remove_count
+
+        if new_quantity > 0:
+            cursor.execute('''
                     UPDATE orders
                     SET total_price = total_price - ?
                     WHERE order_id = ?
                     ''', (item[1] * remove_count, order_id))
-    connection.commit()
-
-    #Item aus der Bestellung löschen, falls Anzahl auf 0 geht
-    if item[0] - remove_count == 0:
-        cursor.execute('''
-                        DELETE FROM order_details
-                        WHERE order_id = ? AND item_name = ?
-                        ''', (order_id, item_name))
-    else:
-        cursor.execute('''
+            
+            cursor.execute('''
                         UPDATE order_details
                         SET quantity = quantity - ?
                         WHERE order_id = ? AND item_name = ?
                         ''', (remove_count, order_id, item_name))
-    connection.close()
 
+        else:
+            cursor.execute('''
+                        DELETE FROM order_details
+                        WHERE order_id = ? AND item_name = ?
+                        ''', (order_id, item_name))
+
+    connection.commit()   
+    connection.close()
     return redirect(url_for('views.warenkorb'))

@@ -19,13 +19,16 @@
             </div>
           </div>
           <div class="row mx-2 mt-3">
-            <div class="col-8">
-              <input type="number" class="form-control" value="1" min="1" />
-            </div>
-            <div class="col-4 d-flex align-items-center justify-content-between">
-              <button class="btn btn-danger">Entfernen</button>
-            </div>
-          </div>
+            <form action="/remove_item_order" method="POST" class="d-flex align-items-center w-100">
+                <div class="col-8">
+                    <input type="number" class="form-control" name="remove_count" value="1" min="1" max="{{ item[1] }}" />
+                    <input type="hidden" name="item_name" value="{{ item[0] }}">
+                </div>
+                <div class="col-4 d-flex align-items-center justify-content-between">
+                    <button type="submit" class="btn btn-danger">Entfernen</button>
+                </div>
+            </form>
+        </div>
         </div>
       </div>
     </div>
