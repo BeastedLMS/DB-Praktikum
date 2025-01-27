@@ -308,7 +308,30 @@ def bestellungZusammenstellen():
 
 @views.route('/bestellhistorie')
 def bestellhistorie():
-    return render_template("bestellhistorie.html")
+    user_email = session.get('user_email')
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+
+    # neue Bestellungen anzeigen
+    cursor.execute('''
+        SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, order_details.item_name, order_details.quantity, order_details.price
+        FROM orders
+        INNER JOIN order_details ON orders.order_id = order_details.order_id
+        WHERE (orders.status = 'in Bearbeitung' OR orders.status = 'in Zubereitung') AND user_email = ?;
+    ''', (user_email,))
+    new_orders = cursor.fetchall()
+
+    
+    # alte Bestellungen anzeigen
+    cursor.execute('''
+        SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, order_details.item_name, order_details.quantity, order_details.price
+        FROM orders
+        INNER JOIN order_details ON orders.order_id = order_details.order_id
+        WHERE (orders.status = 'storniert' OR orders.status = 'abgeschlossen') AND user_email = ?;
+    ''', (user_email,))
+    old_orders = cursor.fetchall()
+
+    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders)
 
 @views.route('/warenkorb')
 def warenkorb():

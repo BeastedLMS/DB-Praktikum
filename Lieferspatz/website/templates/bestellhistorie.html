@@ -3,22 +3,22 @@
 {% block content %}
 <h1 class="mt-5">laufende Bestellungen</h1> 
 <div class="list-group">
+  {% for order in new_orders %}
     <a class="list-group-item list-group-item-action mb-3">
         <div class="card mb-3">
             <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
             <div class="card-body">
               <h5 class="card-title mt-3">Restaurantname</h5>
               <p class="card-text mt-2">
-                Bestellt am: 18.01.2025 12:25 Uhr<br>
-                Status: in Bearbeitung<br><br>
+                Bestellt am: {{ order[2] }}<br>
+                Status: {{ order[3] }}<br><br>
 
-                Pizza   7,50€<br>
-                Sushi-Set   15,50€<br>
-                Cheeseburger    9,00€
+                {{ order[4] }}   {{ order[6] }}€<br>
             </p>
             </div>
         </div>
     </a>
+  {% endfor %}
     {% for restaurantname, items, preis, datum, zeit, status in laufendeBestellungen %}
     <a class="list-group-item list-group-item-action mb-3">
       <div class="card mb-3">
@@ -52,7 +52,8 @@
             <div class="accordion-body">
                 Pizza   7,50€<br>
                 Sushi-Set   15,50€<br>
-                Cheeseburger    9,00€
+                Cheeseburger  9,00€<br>
+                Gesamtpreis 0€
             </div>
           </div>
         </div>
