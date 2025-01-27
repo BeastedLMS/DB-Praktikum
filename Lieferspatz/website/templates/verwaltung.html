@@ -1,5 +1,4 @@
-{% extends "baseRestaurant.html" %} {% block title %}Verwaltung{% endblock %} {%
-block content %}
+{% extends "baseRestaurant.html" %} {% block title %}Verwaltung{% endblock %} {% block content %}
 
 <div class="container mt-5">
   <h2 class="mb-4">Verwaltung</h2>
@@ -48,6 +47,26 @@ block content %}
     </form>
   </div>
 
+  <!-- Abschnitt für die Verwaltung und Aktualisierung der Beschreibung -->
+  <div class="border rounded p-4 mb-5" style="background-color: #f9f9f9">
+    <h3>Restaurantbeschreibung</h3>
+    <form method="POST" action="/update_description">
+      <div class="mb-3">
+        <label for="description" class="form-label">Beschreibung</label>
+        <input
+          type="text"
+          class="form-control"
+          id="description"
+          name="description"
+          placeholder="{{ current_caption }}"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-success">Aktualisieren</button>
+    </form>
+  </div>
+
+
   <!-- Abschnitt für Liefergebiete -->
   <div class="border rounded p-4 mb-5" style="background-color: #f9f9f9">
     <h2>Liefergebiete verwalten</h2>
@@ -87,7 +106,7 @@ block content %}
     {% endif %}
 
     <!-- Testgebiet zuende-->
-  </div>
+  </div>  
 </div>
 
 {% endblock %}

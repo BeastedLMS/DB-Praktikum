@@ -309,7 +309,6 @@ def bestellhistorie():
 
 @views.route('/warenkorb')
 def warenkorb():
-    #restaurant_email = request.form.get("restaurant_email")
     order_id = session.get('order_id')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -321,13 +320,14 @@ def warenkorb():
     items = cursor.fetchall()
 
     cursor.execute('''
-                    SELECT total_price
+                    SELECT total_price, caption
                     FROM orders
                     WHERE order_id = ?
                     ''', (order_id,))
-    total_price = cursor.fetchone()
+    order_details = cursor.fetchone()
     connection.close()
-    return render_template("warenkorb.html", items=items, total_price=total_price)
+    comments = order_details[1] if order_details[1] else ""
+    return render_template("warenkorb.html", items=items, total_price=order_details[0], comments=comments)
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
@@ -424,14 +424,40 @@ def verwaltung():
         WHERE restaurant_email = ?
     ''', (session.get('restaurant_email'),))
     opening_hours = cursor.fetchall()
+
+    # Holen der aktuellen Beschreibung aus der Datenbank
+    cursor.execute('''
+        SELECT caption
+        FROM restaurants
+        WHERE email = ?
+    ''', (session.get('restaurant_email'),))
+    current_caption = cursor.fetchone()[0]
+
     connection.close()
 
     # Umwandeln in ein Wörterbuch
     opening_hours_dict = {day: {'opening_time': opening_time, 'closing_time': closing_time}
                           for day, opening_time, closing_time in opening_hours}
 
-    return render_template('verwaltung.html', opening_hours=opening_hours_dict, areas=areas)
+    return render_template('verwaltung.html', opening_hours=opening_hours_dict, areas=areas, current_caption=current_caption)
 
+@views.route('/update_description', methods=['POST'])
+def update_description():
+    new_description = request.form.get('description')
+    restaurant_email = session.get('restaurant_email')
+    
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    cursor.execute('''
+        UPDATE restaurants
+        SET caption = ?
+        WHERE email = ?
+    ''', (new_description, restaurant_email))
+    connection.commit()
+    connection.close()
+    
+    flash('Beschreibung erfolgreich aktualisiert!', 'success')
+    return redirect(url_for('views.verwaltung'))
 
 @views.route('/remove_item/<int:item_id>', methods=['POST'])
 def remove_item(item_id):
@@ -608,4 +634,22 @@ def remove_item_order():
 
     connection.commit()   
     connection.close()
+    return redirect(url_for('views.warenkorb'))
+
+@views.route('/order_comments', methods=['POST'])
+def order_comments():
+    order_id = session.get('order_id')
+    comments = request.form.get('comments')
+
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    cursor.execute('''
+        UPDATE orders
+        SET caption = ?
+        WHERE order_id = ?
+    ''', (comments, order_id))
+    connection.commit()
+    connection.close()
+
+    flash('Anmerkungen erfolgreich aktualisiert!', 'success')
     return redirect(url_for('views.warenkorb'))
