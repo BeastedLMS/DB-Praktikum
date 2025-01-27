@@ -207,7 +207,7 @@ def homeRestaurant():
 
     # alte Bestellungen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, total_price, delivery_address, order_date
+        SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
         WHERE status = 'abgeschlossen' OR status = 'storniert'
     ''')
@@ -219,30 +219,33 @@ def homeRestaurant():
     connection.close()                              
     return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders)
 
-def update_order_status(order_id, status):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
+
+@views.route('/accept_order/<int:order_id>', methods=['POST'])
+def accept_order(order_id):
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
     cursor.execute('''
         UPDATE orders 
         SET status = ? 
         WHERE order_id = ?
-        ''', (status, order_id))
-    conn.commit()
-    conn.close()
-
-@views.route('/accept_order/<int:order_id>', methods=['POST'])
-def accept_order(order_id):
-    update_order_status(order_id, 'in Zubereitung')
-    return redirect(url_for('homeRestaurant.html'))
+        ''', ('in Zubereitung', order_id))
+    connection.commit()
+    connection.close()
+    return redirect(url_for('views.homeRestaurant'))
 
 @views.route('/reject_order/<int:order_id>', methods=['POST'])
 def reject_order(order_id):
-    update_order_status(order_id, 'storniert')
-    return redirect(url_for('homeRestaurant.html'))
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    cursor.execute('''
+        UPDATE orders 
+        SET status = ? 
+        WHERE order_id = ?
+        ''', ('storniert', order_id))
+    connection.commit()
+    connection.close()
+    return redirect(url_for('views.homeRestaurant'))
 
-@views.route('annehmen/<int:order_id>', methods=['POST'])
-def annehmen(order_id):
-    return redirect(url_for('homeRestaurant.html'))
 @views.route('/homeKunde')
 def homeKunde():
     user_zip = session.get('user_zip')
