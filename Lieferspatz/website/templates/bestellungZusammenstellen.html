@@ -24,15 +24,13 @@
             <div class="col-8">
                 <h1 class="card-title">{{restaurant.name}}</h1>
                 <p class="card-text">{{restaurant.adresse}}<br>{{restaurant.stadt}} {{restaurant.plz}}</p>
-                <p class="card-text">oeffnungszeiten:<br>
-                    Mo.: __:__ bis __:__ Uhr<br>
-                    Di.: __:__ bis __:__ Uhr<br>
-                    Mi.: __:__ bis __:__ Uhr<br>
-                    Do.: __:__ bis __:__ Uhr<br>
-                    Fr.: __:__ bis __:__ Uhr<br>
-                    Sa.: __:__ bis __:__ Uhr<br>
-                    So.: __:__ bis __:__ Uhr<br>
+                <br>
+                <p class="card-text">Öffnungszeiten:<br>
+                    {% for day, times in restaurant.oeffnungszeiten.items() %}
+                        {{ day }}: {{ times.opening_time}} bis {{ times.closing_time}} Uhr<br>
+                    {% endfor %}
                 </p>
+                <br>
             </div>
             <div class="col-4">
                 <img src="https://hamburg.mitvergnuegen.com/wp-content/uploads/sites/2/2021/11/restaurants-hafencity-titelbild.png" class="img-fluid" >
