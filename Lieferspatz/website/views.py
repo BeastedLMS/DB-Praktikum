@@ -278,7 +278,17 @@ def bestellhistorie():
 
 @views.route('/warenkorb')
 def warenkorb():
-    return render_template("warenkorb.html")
+    restaurant_email = session.get('restaurant_email')
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    cursor.execute('''
+                    SELECT item_name, caption, price
+                    FROM menue
+                    WHERE restaurant_email = ?
+                    ''', (restaurant_email,))
+    items = cursor.fetchall()
+    connection.close()
+    return render_template("warenkorb.html", items=items)
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
