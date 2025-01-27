@@ -59,7 +59,7 @@
                     {% for item in items %}
                     <div class="col">
                         <div class="card mb-3 mx-3">
-                            <form action="/add_to_order" method="post">
+                            <form action="/add_to_order" method="post" class="order-form">
                                 <div class="card-body">
                 
                                     <div class="row mx-2">
@@ -76,14 +76,14 @@
                                             <h5 class="card-title">{{ item[2] }}€</h5>
                                         </div>
 
-                                        <!-- Hier fehlt noch die Funktionalität zum Hinzufügen von Gerichten zum Warenkorb -->
                                         <div class="col-4 d-flex align-items-center justify-content-between">
+                                            <button type="button" class="btn btn-primary decrement">-</button>
+                                            <h5 class="card-title quantity">0</h5>
+                                            <button type="button" class="btn btn-primary increment">+</button>
+                                            <input type="hidden" name="item_name" value="{{ item[0] }}">
+                                            <input type="hidden" name="quantity" class="quantity-input" value="0">
                                             <button class="btn btn-primary" type="submit">hinzufügen</button>
-                                            <button class="btn btn-primary" type="submit">-</button>
-                                            <h5 class="card-title">0</h5>
-                                            <button class="btn btn-primary" type="submit">+</button>
                                         </div>
-                                        <!-- Hier endet die Funktionalität zum Hinzufügen von Gerichten zum Warenkorb -->
                                     </div>
                                 </div>
                             </form>
@@ -95,4 +95,29 @@
         </div>
     </div>    
 </div>
+
+<script>
+document.querySelectorAll('.order-form').forEach(form => {
+    const decrementButton = form.querySelector('.decrement');
+    const incrementButton = form.querySelector('.increment');
+    const quantityDisplay = form.querySelector('.quantity');
+    const quantityInput = form.querySelector('.quantity-input');
+
+    decrementButton.addEventListener('click', () => {
+        let quantity = parseInt(quantityDisplay.textContent);
+        if (quantity > 0) {
+            quantity--;
+            quantityDisplay.textContent = quantity;
+            quantityInput.value = quantity;
+        }
+    });
+
+    incrementButton.addEventListener('click', () => {
+        let quantity = parseInt(quantityDisplay.textContent);
+        quantity++;
+        quantityDisplay.textContent = quantity;
+        quantityInput.value = quantity;
+    });
+});
+</script>
 {% endblock %}
