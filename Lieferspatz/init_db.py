@@ -72,20 +72,33 @@ create table IF NOT EXISTS delivery_areas (
     )         
 ''')
 
-# tabelle zum testen der bestellungen Seite in homeRestaurant
+# tabelle für die Bestellungen
 cursor.execute('''
 create table IF NOT EXISTS orders (
     order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
     restaurant_email TEXT NOT NULL,
-    items TEXT NOT NULL,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     total_price REAL NOT NULL,
     delivery_address TEXT NOT NULL,
-    date TEXT NOT NULL,
-    time TEXT NOT NULL,
+    delivery_plz TEXT NOT NULL,
+    caption TEXT,
     status TEXT NOT NULL,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
-        ON DELETE CASCADE
         ON UPDATE CASCADE
+    FOREIGN KEY(user_email) REFERENCES users(email)
+)
+''')
+
+# Tabelle für Details der Bestellungen
+cursor.execute('''
+create table IF NOT EXISTS order_details (
+    order_details_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    item_name TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    price REAL,
+    FOREIGN KEY (order_id) REFERENCES orders (order_id)
 )
 ''')
 
