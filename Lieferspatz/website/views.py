@@ -86,6 +86,7 @@ def logoutUser():
     session.pop('user_city', None)
     session.pop('user_zip', None)
     session.pop('user_guthaben', None)
+    session.pop('order_id', None)
     return redirect(url_for('views.home'))
 
 #Um Sessiondaten des Restaurants zu löschen und auf die Startseite zu leiten
@@ -236,6 +237,8 @@ def homeKunde():
 @views.route('/bestellungZusammenstellen', methods=['GET', 'POST'])
 def bestellungZusammenstellen():
     restaurant_email = request.form.get("restaurant_email")
+    if not restaurant_email:
+        restaurant_email = request.args.get("restaurant_email")
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -267,6 +270,7 @@ def bestellungZusammenstellen():
         "stadt": restaurant[3],
         "plz": restaurant[4],
         "bild": restaurant[5],
+        "restaurant_email": restaurant_email,
         "oeffnungszeiten": {day: {'opening_time': opening_time, 'closing_time': closing_time} for day, opening_time, closing_time in opening_hours}
     }
     
@@ -471,8 +475,8 @@ def add_to_order():
     price = float(request.form.get('item_price'))
     user_email = session.get('user_email')  # Benutzer-Email aus Session
     restaurant_email = request.form.get("restaurant_email") # Restaurant-Email aus der Seite
-    user_address = session.get('delivery_address')  # Lieferadresse
-    user_plz = session.get('delivery_plz')  # Liefer-PLZ
+    user_address = session.get('user_address')  # Lieferadresse
+    user_plz = session.get('user_zip')  # Liefer-PLZ
 
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
@@ -482,7 +486,7 @@ def add_to_order():
     if not order_id:
         #Neue Bestellung Anlegen, da keine vorhanden ist
         cursor.execute('''
-                        INSERT INTO orders (user_email, restaurant_email, total_price, delivery_address, delivery_zip, status)
+                        INSERT INTO orders (user_email, restaurant_email, total_price, delivery_address, delivery_plz, status)
                         VALUES (?, ?, 0, ?, ?, 'new')
                         ''', (user_email, restaurant_email, user_address, user_plz))
         connection.commit()
@@ -490,10 +494,29 @@ def add_to_order():
         session['order_id'] = order_id
 
     #Items zur Bestellung hinzufügen
+    # Prüfen, ob ein Eintrag mit derselben order_id und item_name existiert
     cursor.execute('''
-                    INSERT INTO order_items (order_id, item_name, quantity, price)
-                    VALUES (?, ?, ?, ?)
-                    ''', (order_id, item_name, quantity, price))
+        SELECT quantity
+        FROM order_details
+        WHERE order_id = ? AND item_name = ?
+    ''', (order_id, item_name))
+
+    existing_entry = cursor.fetchone()
+
+    if existing_entry:
+        # Wenn der Eintrag existiert, erhöhe die quantity
+        new_quantity = existing_entry[0] + quantity  # Addiere die neue Menge
+        cursor.execute('''
+            UPDATE order_details
+            SET quantity = ?
+            WHERE order_id = ? AND item_name = ?
+        ''', (new_quantity, order_id, item_name))
+    else:
+        # Wenn kein Eintrag existiert, füge einen neuen hinzu
+        cursor.execute('''
+            INSERT INTO order_details (order_id, item_name, quantity, price)
+            VALUES (?, ?, ?, ?)
+        ''', (order_id, item_name, quantity, price))
     connection.commit()
 
     #Gesamtpreis der Bestellung aktualisieren
