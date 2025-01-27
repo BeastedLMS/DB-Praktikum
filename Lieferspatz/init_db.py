@@ -37,9 +37,9 @@ cursor.execute('''
 CREATE TABLE IF NOT EXISTS menue (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_name TEXT NOT NULL,
-    item_caption TEXT NOT NULL,
     price REAL NOT NULL,
     restaurant_email TEXT,
+    caption TEXT,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
         ON DELETE CASCADE
         ON UPDATE CASCADE
