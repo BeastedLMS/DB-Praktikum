@@ -460,3 +460,49 @@ def delete_plz():
         connection.close()
 
         return redirect(url_for('views.verwaltung'))
+
+
+# Hier kommt der Abschnitt für die Bestellungen, bzw. das erstellen und hinzufügen von Items und Bestellungen
+@views.route('/add_to_order', methods=['POST'])
+def add_to_order():
+    #Daten aus der Seite bestellungZusammenstellen holen
+    item_name = request.form.get('item_name')
+    quantity = int(request.form.get('quantity'))
+    price = float(request.form.get('item_price'))
+    user_email = session.get('user_email')  # Benutzer-Email aus Session
+    restaurant_email = request.form.get("restaurant_email") # Restaurant-Email aus der Seite
+    user_address = session.get('delivery_address')  # Lieferadresse
+    user_plz = session.get('delivery_plz')  # Liefer-PLZ
+
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+
+    #Überprüfen, ob bereits eine Bestellung für den Benutzer existiert
+    order_id = session.get('order_id')
+    if not order_id:
+        #Neue Bestellung Anlegen, da keine vorhanden ist
+        cursor.execute('''
+                        INSERT INTO orders (user_email, restaurant_email, total_price, delivery_address, delivery_zip, status)
+                        VALUES (?, ?, 0, ?, ?, 'new')
+                        ''', (user_email, restaurant_email, user_address, user_plz))
+        connection.commit()
+        order_id = cursor.lastrowid
+        session['order_id'] = order_id
+
+    #Items zur Bestellung hinzufügen
+    cursor.execute('''
+                    INSERT INTO order_items (order_id, item_name, quantity, price)
+                    VALUES (?, ?, ?, ?)
+                    ''', (order_id, item_name, quantity, price))
+    connection.commit()
+
+    #Gesamtpreis der Bestellung aktualisieren
+    cursor.execute('''
+                   UPDATE orders
+                     SET total_price = total_price + ?
+                     WHERE order_id = ?
+                     ''', (price * quantity, order_id))
+    connection.commit()
+    connection.close()
+
+    return redirect(url_for('views.bestellungZusammenstellen', restaurant_email=restaurant_email))

@@ -59,30 +59,34 @@
                     {% for item in items %}
                     <div class="col">
                         <div class="card mb-3 mx-3">
-                            <div class="card-body">
-            
-                                <div class="row mx-2">
-                                    <div class="col-8">
-                                        <h5 class="card-title">{{ item[0] }}</h5>
-                                        <p class="card-text">{{ item[1] }}</p>
+                            <form action="/add_to_order" method="post">
+                                <div class="card-body">
+                
+                                    <div class="row mx-2">
+                                        <div class="col-8">
+                                            <h5 class="card-title">{{ item[0] }}</h5>
+                                            <p class="card-text">{{ item[1] }}</p>
+                                        </div>
+                                        <div class="col-4">
+                                        
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                       
+                                    <div class="row mx-2 mt-3">
+                                        <div class="col-8">
+                                            <h5 class="card-title">{{ item[2] }}€</h5>
+                                        </div>
+
+                                        <!-- Hier fehlt noch die Funktionalität zum Hinzufügen von Gerichten zum Warenkorb -->
+                                        <div class="col-4 d-flex align-items-center justify-content-between">
+                                            <button class="btn btn-primary" type="submit">hinzufügen</button>
+                                            <button class="btn btn-primary" type="submit">-</button>
+                                            <h5 class="card-title">0</h5>
+                                            <button class="btn btn-primary" type="submit">+</button>
+                                        </div>
+                                        <!-- Hier endet die Funktionalität zum Hinzufügen von Gerichten zum Warenkorb -->
                                     </div>
                                 </div>
-                                <div class="row mx-2 mt-3">
-                                    <div class="col-8">
-                                        <h5 class="card-title">{{ item[2] }}€</h5>
-                                    </div>
-                                    <div class="col-4 d-flex align-items-center justify-content-between">
-                                        <button class="btn btn-primary" type="submit">hinzufügen</button>
-                                        <button class="btn btn-primary" type="submit">-</button>
-                                        <h5 class="card-title">0</h5>
-                                        <button class="btn btn-primary" type="submit">+</button>
-                                    </div>
-                                </div>
-            
-                            </div>
+                            </form>
                         </div>
                     </div>
                     {% endfor %} 
