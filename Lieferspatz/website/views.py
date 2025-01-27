@@ -199,7 +199,7 @@ def homeRestaurant():
 
     # neue Bestellunguen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, total_price, delivery_address, order_date
+        SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
         WHERE status = 'in Bearbeitung' OR status = 'in Zubereitung'
     ''')
