@@ -22,9 +22,9 @@
     <div class="card-body">
         <div class="row mx-2">
             <div class="col-8">
-                <h1 class="card-title">{{name}}</h1>
-                <p class="card-text">{{Adresse}}<br>{{Stadt}} {{postLeitZahl}}</p>
-                <p class="card-text">Öffnungszeiten:<br>
+                <h1 class="card-title">{{restaurant.name}}</h1>
+                <p class="card-text">{{restaurant.adresse}}<br>{{restaurant.stadt}} {{restaurant.plz}}</p>
+                <p class="card-text">oeffnungszeiten:<br>
                     Mo.: __:__ bis __:__ Uhr<br>
                     Di.: __:__ bis __:__ Uhr<br>
                     Mi.: __:__ bis __:__ Uhr<br>
@@ -38,7 +38,7 @@
                 <img src="https://hamburg.mitvergnuegen.com/wp-content/uploads/sites/2/2021/11/restaurants-hafencity-titelbild.png" class="img-fluid" >
             </div>
             <div class="col-12 p-2">
-                <p class="card-text">{{Beschreibung}}</p>
+                <p class="card-text">{{restaurant.beschreibung}}</p>
             </div>
         </div>
     </div>    
