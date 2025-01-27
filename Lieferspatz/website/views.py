@@ -282,7 +282,7 @@ def bestellhistorie():
 
 @views.route('/warenkorb')
 def warenkorb():
-    restaurant_email = request.form.get("restaurant_email")
+    #restaurant_email = request.form.get("restaurant_email")
     order_id = session.get('order_id')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -292,8 +292,15 @@ def warenkorb():
                     WHERE order_id = ?
                     ''', (order_id,))
     items = cursor.fetchall()
+
+    cursor.execute('''
+                    SELECT total_price
+                    FROM orders
+                    WHERE order_id = ?
+                    ''', (order_id,))
+    total_price = cursor.fetchone()
     connection.close()
-    return render_template("warenkorb.html", items=items)
+    return render_template("warenkorb.html", items=items, total_price=total_price)
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
@@ -530,3 +537,4 @@ def add_to_order():
     connection.close()
 
     return redirect(url_for('views.bestellungZusammenstellen', restaurant_email=restaurant_email))
+
