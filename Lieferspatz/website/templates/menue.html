@@ -11,8 +11,9 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ item.name }}</h5>
           <p class="card-text"><strong>Preis:</strong> €{{ item.price }}</p>
+          <p class="card-text"><strong>Beschreibung:</strong> {{ item.caption }}</p>
           <div class="mt-auto">
-            <button class="btn btn-warning w-100 mb-2" onclick="Bearbeiten('{{ item.id }}', '{{ item.name }}', '{{ item.price }}')">
+            <button class="btn btn-warning w-100 mb-2" onclick="Bearbeiten('{{ item.id }}', '{{ item.name }}', '{{ item.price }}', '{{ item.caption }}')">
               Bearbeiten
               <form action="/remove_item/{{ item.id }}" method="POST" style="display:inline;">
                 <button class="btn btn-danger w-100" type="submit">Entfernen</button>
@@ -35,6 +36,10 @@
       <label for="price" class="form-label">Preis</label>
       <input type="number" step="0.01" class="form-control" id="price" name="price" required>
     </div>
+    <div class="mb-3">
+      <label for="caption" class="form-label">Beschreibung</label>
+      <input type="text" class="form-control" id="caption" name="caption" required>
+    </div>
     <button type="submit" class="btn btn-primary">Speichern</button>
   </form>
 </div>
@@ -44,13 +49,8 @@ function Bearbeiten(id, name, price) {
   document.getElementById('item_id').value = id;
   document.getElementById('name').value = name;
   document.getElementById('price').value = price;
+  document.getElementById('caption').value = caption;
 }
 
-"Das entfernen funktioniert noch nicht"
-function Entfernen(id) { 
-  document.getElementById('item_id').value = '';
-  document.getElementById('name').value = '';
-  document.getElementById('price').value = '';
-}
 </script>
 {% endblock %}
