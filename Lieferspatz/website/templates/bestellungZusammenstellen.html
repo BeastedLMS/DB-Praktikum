@@ -26,9 +26,16 @@
                 <p class="card-text">{{restaurant.adresse}}<br>{{restaurant.stadt}} {{restaurant.plz}}</p>
                 <br>
                 <p class="card-text">Öffnungszeiten:<br>
-                    {% for day, times in restaurant.oeffnungszeiten.items() %}
-                        {{ day }}: {{ times.opening_time}} bis {{ times.closing_time}} Uhr<br>
-                    {% endfor %}
+                    <table class="table">
+                        <tbody>
+                            {% for day, times in restaurant.oeffnungszeiten.items() %}
+                            <tr>
+                                <td>{{ day }}</td>
+                                <td>{{ times.opening_time }} bis {{ times.closing_time }} Uhr</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </p>
                 <br>
             </div>
