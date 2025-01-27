@@ -198,7 +198,7 @@ def homeRestaurant():
 
     # neue Bestellunguen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, items, total_price, delivery_address, date, time
+        SELECT order_id, total_price, delivery_address, order_date
         FROM orders
         WHERE status = 'new'
     ''')
@@ -206,7 +206,7 @@ def homeRestaurant():
 
     # alte Bestellungen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, items, total_price, delivery_address, date, time
+        SELECT order_id, total_price, delivery_address, order_date
         FROM orders
         WHERE status = 'old'
     ''')
