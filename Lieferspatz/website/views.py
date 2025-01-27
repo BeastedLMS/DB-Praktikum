@@ -191,7 +191,7 @@ def homeRestaurant():
     # cursor.execute('''
     #     INSERT INTO orders (restaurant_email, items, total_price, delivery_address, date, time, status)
     #     VALUES 
-    #     ('admin@1', 'Pizza, Cola', 20.50, 'Musterstraße 123, Musterstadt', '2025-01-25', '18:30', 'new'),
+    #     ('admin@1', 'Pizza, Cola', 20.50, 'Musterstraße 123, Musterstadt', '2025-01-25', '18:30', 'in Bearbeitung'),
     #     ('admin@1', 'Burger, Pommes', 15.00, 'Beispielstraße 45, Teststadt', '2025-01-20', '17:00', 'old')
     # ''')
     # connection.commit()
@@ -201,7 +201,7 @@ def homeRestaurant():
     cursor.execute('''
         SELECT order_id, total_price, delivery_address, order_date
         FROM orders
-        WHERE status = 'new'
+        WHERE status = 'in Bearbeitung' OR status = 'in Zubereitung'
     ''')
     new_orders = cursor.fetchall()
 
@@ -209,13 +209,40 @@ def homeRestaurant():
     cursor.execute('''
         SELECT order_id, total_price, delivery_address, order_date
         FROM orders
-        WHERE status = 'old'
+        WHERE status = 'abgeschlossen' OR status = 'storniert'
     ''')
+
+    
+
     old_orders = cursor.fetchall()
 
     connection.close()                              
     return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders)
 
+def update_order_status(order_id, status):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE orders 
+        SET status = ? 
+        WHERE order_id = ?
+        ''', (status, order_id))
+    conn.commit()
+    conn.close()
+
+@views.route('/accept_order/<int:order_id>', methods=['POST'])
+def accept_order(order_id):
+    update_order_status(order_id, 'in Zubereitung')
+    return redirect(url_for('homeRestaurant.html'))
+
+@views.route('/reject_order/<int:order_id>', methods=['POST'])
+def reject_order(order_id):
+    update_order_status(order_id, 'storniert')
+    return redirect(url_for('homeRestaurant.html'))
+
+@views.route('annehmen/<int:order_id>', methods=['POST'])
+def annehmen(order_id):
+    return redirect(url_for('homeRestaurant.html'))
 @views.route('/homeKunde')
 def homeKunde():
     user_zip = session.get('user_zip')
@@ -495,7 +522,7 @@ def add_to_order():
         #Neue Bestellung Anlegen, da keine vorhanden ist
         cursor.execute('''
                         INSERT INTO orders (user_email, restaurant_email, total_price, delivery_address, delivery_plz, status)
-                        VALUES (?, ?, 0, ?, ?, 'new')
+                        VALUES (?, ?, 0, ?, ?, 'in Bearbeitung')
                         ''', (user_email, restaurant_email, user_address, user_plz))
         connection.commit()
         order_id = cursor.lastrowid

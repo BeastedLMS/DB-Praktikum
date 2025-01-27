@@ -50,6 +50,14 @@ content %}
                   <strong>Uhrzeit:</strong> {{ order[5] }}
                 </p>
               </div>
+              <div>
+              <form action="/accept_order/{{ order[0] }}" method="POST" style="display:inline;">
+                <button class="btn btn-primary" type="submit">Annehmen</button>
+            </form>
+            <form action="/reject_order/{{ order[0] }}" method="POST" style="display:inline;">
+              <button class="btn btn-danger " type="submit">Ablehnen</button>
+          </form>
+          </div>
             </div>
           </div>
           {% endfor %}
