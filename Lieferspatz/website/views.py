@@ -402,6 +402,7 @@ def menue():
 
 @views.route('/verwaltung', methods=['GET', 'POST'])
 def verwaltung():
+    restaurant_guthaben = session.get('restaurant_guthaben')
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
 
@@ -474,7 +475,7 @@ def verwaltung():
     opening_hours_dict = {day: {'opening_time': opening_time, 'closing_time': closing_time}
                           for day, opening_time, closing_time in opening_hours}
 
-    return render_template('verwaltung.html', opening_hours=opening_hours_dict, areas=areas, current_caption=current_caption)
+    return render_template('verwaltung.html', opening_hours=opening_hours_dict, areas=areas, current_caption=current_caption, restaurant_guthaben=restaurant_guthaben)
 
 @views.route('/update_description', methods=['POST'])
 def update_description():
