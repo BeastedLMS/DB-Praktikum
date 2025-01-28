@@ -306,8 +306,9 @@ def reject_order(order_id):
             SET guthaben = guthaben + ?
             WHERE email = ?
             ''', (total_price_decimal, user_email))
-
+    connection.commit()
     connection.close()
+    session['user_guthaben'] = str(Decimal(session.get('user_guthaben')) + total_price_decimal)
     return redirect(url_for('views.homeRestaurant'))
 
 @views.route('/homeKunde')
@@ -373,9 +374,11 @@ def bestellungZusammenstellen():
 
 @views.route('/bestellhistorie')
 def bestellhistorie():
+    user_guthaben = Decimal(session.get('user_guthaben'))
     user_email = session.get('user_email')
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
+    
 
     # neue Bestellungen anzeigen
     cursor.execute('''
@@ -401,7 +404,7 @@ def bestellhistorie():
     ''', (user_email,))
     old_orders = cursor.fetchall()
 
-    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders)
+    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders, user_guthaben=user_guthaben)
 
 @views.route('/warenkorb')
 def warenkorb():
