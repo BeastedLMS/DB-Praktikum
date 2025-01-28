@@ -426,6 +426,21 @@ def bestellhistorie():
                         WHERE (orders.status = 'in Bearbeitung' OR orders.status = 'in Zubereitung') AND orders.user_email = ?;
     ''', (user_email,))
     new_orders = cursor.fetchall()
+    
+    grouped_orders = {}
+    for order in new_orders:
+        order_id = order[0]
+        item_name = order[4]
+        price = order[5]
+        quantity = ord[7]
+        if order_id not in grouped_orders:
+            grouped_orders[order_id] = []
+        grouped_orders[order_id].append((item_name, price, quantity))
+
+    # Konvertiere das Dictionary in eine Liste von Tupeln
+    items = [(order_id, items) for order_id, items in grouped_orders.items()]
+
+    print(items)
 
     
     # alte Bestellungen anzeigen
@@ -439,7 +454,7 @@ def bestellhistorie():
     ''', (user_email,))
     old_orders = cursor.fetchall()
 
-    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders, user_guthaben=user_guthaben)
+    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders, user_guthaben=user_guthaben, items=items)
 
 @views.route('/warenkorb')
 def warenkorb():

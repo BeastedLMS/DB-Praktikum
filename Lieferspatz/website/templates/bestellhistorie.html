@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="mt-5">laufende Bestellungen</h1> 
 <div class="list-group">
-  {% for order in new_orders %}
+  {% for item in items %}
     <a class="list-group-item list-group-item-action mb-3">
         <div class="card mb-3">
             <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
@@ -12,29 +12,13 @@
               <p class="card-text mt-2">
                 Bestellt am: {{ order[2] }}<br>
                 Status: {{ order[3] }}<br><br>
-
-                {{ order[4] }}   {{ order[5] }}€<br>
+                {% for item in items[1] %}
+                {{ item[3] }} {{ item[0] }} {{ item[1]*item[2] }}€<br>
+                {% endfor %}
+                Gesamtpreis {{ order [1] }}€
             </p>
             </div>
         </div>
-    </a>
-  {% endfor %}
-    {% for restaurantname, items, preis, datum, zeit, status in laufendeBestellungen %}
-    <a class="list-group-item list-group-item-action mb-3">
-      <div class="card mb-3">
-          <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
-          <div class="card-body">
-            <h5 class="card-title mt-3">{{restaurantname}}</h5>
-            <p class="card-text mt-2">
-              {{"Bestellt am: " + datum + " " + zeit + "Uhr"}}<br>
-              {{"Status: " + status}}<br><br>
-
-              {% for item in items %}
-              {{item + "  " + preis + "€\n"}}
-              {% endfor %}
-          </p>
-          </div>
-      </div>
     </a>
     {% endfor %}  
 </div>
