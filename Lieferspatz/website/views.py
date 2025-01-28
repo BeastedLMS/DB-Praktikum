@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for, session
-import sqlite3
+from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for, session, jsonify
+import sqlite3, time
 from decimal import Decimal, ROUND_HALF_UP
+
 
 views = Blueprint('views', __name__)
 
@@ -232,6 +233,27 @@ def homeRestaurant():
 
     connection.close()                              
     return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders, restaurant_guthaben=restaurant_guthaben)
+
+
+@views.route('/check_new_orders')
+def check_new_orders():
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    
+    restaurant_email = session.get('restaurant_email')
+
+    # Anzahl neuer Bestellungen holen
+    cursor.execute('''
+        SELECT COUNT(*) FROM orders
+        WHERE status = 'in Bearbeitung' AND restaurant_email = ?
+    ''', (restaurant_email,))
+    
+    new_orders_count = cursor.fetchone()[0] #von den neuen Bestellungen die neuste holen
+    connection.close()
+
+    return jsonify({'new_orders': new_orders_count})
+
+
 
 @views.route('/send_order/<int:order_id>', methods=['POST'])
 def send_order(order_id):

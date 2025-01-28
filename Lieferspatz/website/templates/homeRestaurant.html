@@ -26,6 +26,7 @@ content %}
     <!-- Scrolling content -->
     <div class="border p-3 mt-5" style="background-color: #f9f9f9">
       <h1>Willkommen zurück, {{session['restaurant_name']}}</h1>
+
       <h2 class="mt-5">Bestellhistorie</h2>
       <div class="border p-3 mt-4" style="background-color: white">
         <h3 class="mt-5">Neue Bestellungen</h3>
@@ -106,5 +107,34 @@ content %}
     </div>
   </div>
 </div>
+
+<!-- Bootstrap Toast für Benachrichtigung -->
+<div class="toast" id="newOrderToast" style="position: absolute; top: 20px; right: 20px" data-bs-autohide="false">
+  <div class="toast-header">
+    <strong class="me-auto">Neue Bestellung!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    Du hast neue Bestellungen in Bearbeitung!
+  </div>
+</div>
+
+<script>
+  // Funktion zum Überprüfen neuer Bestellungen
+  function checkNewOrders() {
+    fetch('/check_new_orders')
+      .then(response => response.json())
+      .then(data => {
+        if (data.new_orders > 0) {
+          // Zeige die Toast-Nachricht, wenn neue Bestellungen vorliegen
+          const toast = new bootstrap.Toast(document.getElementById('newOrderToast'));
+          toast.show();
+        }
+      });
+  }
+
+  // Überprüfe alle 5 Sekunden auf neue Bestellungen
+  setInterval(checkNewOrders, 5000);
+</script>
 
 {% endblock %}
