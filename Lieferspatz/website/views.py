@@ -663,6 +663,11 @@ def remove_item_order():
 
         else:
             cursor.execute('''
+                    UPDATE orders
+                    SET total_price = total_price - ?
+                    WHERE order_id = ?
+                    ''', (item_details[0] * item_details[1], order_id))
+            cursor.execute('''
                         DELETE FROM order_details
                         WHERE order_id = ? AND item_name = ?
                         ''', (order_id, item_name))
