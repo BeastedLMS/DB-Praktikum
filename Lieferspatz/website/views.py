@@ -575,7 +575,7 @@ def add_to_order():
         #Neue Bestellung Anlegen, da keine vorhanden ist
         cursor.execute('''
                         INSERT INTO orders (user_email, restaurant_email, total_price, delivery_address, delivery_plz, status)
-                        VALUES (?, ?, 0, ?, ?, 'in Bearbeitung')
+                        VALUES (?, ?, 0, ?, ?, 'new')
                         ''', (user_email, restaurant_email, user_address, user_plz))
         connection.commit()
         order_id = cursor.lastrowid
@@ -633,11 +633,11 @@ def remove_item_order():
                     FROM order_details
                     WHERE order_id = ? AND item_name = ?
                     ''', (order_id, item_name))
-    item = cursor.fetchone()
+    item_details = cursor.fetchone()
 
 
-    if item:
-        current_quantity = item[0]
+    if item_details:
+        current_quantity = item_details[0]
         new_quantity = current_quantity - remove_count
 
         if new_quantity > 0:
@@ -645,7 +645,7 @@ def remove_item_order():
                     UPDATE orders
                     SET total_price = total_price - ?
                     WHERE order_id = ?
-                    ''', (item[1] * remove_count, order_id))
+                    ''', (item_details[1] * remove_count, order_id))
             
             cursor.execute('''
                         UPDATE order_details
@@ -663,20 +663,77 @@ def remove_item_order():
     connection.close()
     return redirect(url_for('views.warenkorb'))
 
-@views.route('/order_comments', methods=['POST'])
+@views.route('/bestellen', methods=['POST'])
 def order_comments():
     order_id = session.get('order_id')
     comments = request.form.get('comments')
+    user_guthaben = session.get('user_guthaben')
 
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
-    cursor.execute('''
-        UPDATE orders
-        SET caption = ?
-        WHERE order_id = ?
-    ''', (comments, order_id))
-    connection.commit()
-    connection.close()
 
-    flash('Anmerkungen erfolgreich aktualisiert!', 'success')
-    return redirect(url_for('views.warenkorb'))
+    #BeÜberprüfen ob der Kunde genug Geld hat
+    cursor.execute('''
+                   select total_price
+                     from orders
+                     where order_id = ?
+                     ''', (order_id,))
+    total_price = cursor.fetchone()[0]
+
+    #Bei zu wenig Guthaben wird die Bestellung nicht abgeschickt
+    if total_price > user_guthaben:
+        flash('Nicht genug Guthaben!', 'danger')
+        connection.close()
+        return redirect(url_for('views.warenkorb'))
+    
+    #Bei genug Guthaben wird die Bestellung abgeschickt
+    else:
+        cursor.execute('''
+            UPDATE orders
+            SET caption = ?
+            WHERE order_id = ?
+        ''', (comments, order_id))
+        cursor.execute('''
+                    UPDATE orders 
+                    SET status = 'in Bearbeitung' 
+                    WHERE order_id = ?
+                    ''', (order_id,))
+        
+        #Bezahlen und Geld aufteilen
+        lieferspatz_share = round(total_price * 0.15, 2)
+        restaurant_share = round(total_price * 0.85, 2)
+
+        # Sicherstellen das die Summe genau total_price ergibt
+        difference = total_price - (lieferspatz_share + restaurant_share)
+
+        # Falls durch Rundung ein Cent fehlt/zu viel bekommt dies das Restaurant
+        restaurant_share += difference
+
+        # Guthaben des Restaurants erhöhen
+        cursor.execute('''
+            UPDATE restaurants
+            SET guthaben = guthaben + ?
+            WHERE email = ?
+        ''', (restaurant_share, session.get('restaurant_email')))
+
+        # Guthaben des Kunden verringern
+        cursor.execute('''
+            UPDATE users
+            SET guthaben = guthaben - ?
+            WHERE email = ?
+        ''', (total_price, session.get('user_email')))
+
+        # Guthaben von Lieferspatz erhöhen
+        cursor.execute('''
+            UPDATE restaurants
+            SET guthaben = guthaben + ?
+            WHERE email = 'lieferspatz@gmail.com'
+            ''', (lieferspatz_share,))
+
+        connection.commit()
+        connection.close()
+
+        session['user_guthaben'] -= total_price
+        session.pop('order_id', None)   #Damit bei der nächsten Bestellung eine neue Order_id erstellt wird
+        flash('Bestellung erfolgreich abgeschickt!', 'success')
+        return redirect(url_for('views.homeKunde'))
