@@ -63,6 +63,13 @@ content %}
           </form>
           </div>
           {% endif %}
+          {% if order[4] == 'in Zubereitung' %}
+          <div>
+            <form action="/send_order/{{ order[0] }}" method="POST" style="display:inline;">
+              <button class="btn btn-success" type="submit">Absenden</button>
+          </form>
+        </div>
+          {% endif %}
             </div>
           </div>
           {% endfor %}

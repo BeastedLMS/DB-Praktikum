@@ -233,6 +233,19 @@ def homeRestaurant():
     connection.close()                              
     return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders, restaurant_guthaben=restaurant_guthaben)
 
+@views.route('/send_order/<int:order_id>', methods=['POST'])
+def send_order(order_id):
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
+    cursor = connection.cursor()
+    cursor.execute('''
+        UPDATE orders 
+        SET status = ? 
+        WHERE order_id = ?
+        ''', ('abgeschlossen', order_id))
+    connection.commit()
+    connection.close()
+    return redirect(url_for('views.homeRestaurant'))
+
 
 @views.route('/accept_order/<int:order_id>', methods=['POST'])
 def accept_order(order_id):
