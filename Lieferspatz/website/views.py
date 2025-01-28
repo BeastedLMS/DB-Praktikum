@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for, session
 import sqlite3
+from decimal import Decimal, ROUND_HALF_UP
 
 views = Blueprint('views', __name__)
 
@@ -37,7 +38,7 @@ def login():
             session['user_address'] = rowsKunde[0][3]
             session['user_city'] = rowsKunde[0][4]
             session['user_zip'] = rowsKunde[0][5]
-            session['user_guthaben'] = rowsKunde[0][6]
+            session['user_guthaben'] = str(rowsKunde[0][6])
             #Sessiondaten für Kunde speichern
             connection.close()
             return redirect(url_for('views.homeKunde')) 
@@ -67,7 +68,7 @@ def login():
             session['restaurant_zip'] = rowsRestaurant[0][4]
             session['restaurant_caption'] = rowsRestaurant[0][5]
             session['restaurant_bild'] = rowsRestaurant[0][6]
-            session['restaurant_guthaben'] = rowsRestaurant[0][7]
+            session['restaurant_guthaben'] = str(rowsRestaurant[0][7])
             #Sessiondaten für Restaurant speichern
             connection.close()
             return redirect(url_for('views.homeRestaurant'))
@@ -187,7 +188,7 @@ def homeRestaurant():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
     restaurant_email = session.get('restaurant_email')
-    restaurant_guthaben = session.get('restaurant_guthaben')
+    restaurant_guthaben = Decimal(session.get('restaurant_guthaben'))
 
     # # Testdaten für Bestellungen
     # cursor.execute('''
@@ -251,7 +252,7 @@ def reject_order(order_id):
 @views.route('/homeKunde')
 def homeKunde():
     user_zip = session.get('user_zip')
-    user_guthaben = session.get('user_guthaben')
+    user_guthaben = Decimal(session.get('user_guthaben'))
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -344,7 +345,7 @@ def bestellhistorie():
 @views.route('/warenkorb')
 def warenkorb():
     order_id = session.get('order_id')
-    user_guthaben = session.get('user_guthaben')
+    user_guthaben = Decimal(session.get('user_guthaben'))
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -366,14 +367,14 @@ def warenkorb():
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
-    restaurant_guthaben = session.get('restaurant_guthaben')
+    restaurant_guthaben = Decimal(session.get('restaurant_guthaben'))
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
     if request.method == 'POST':
         item_id = request.form.get('item_id')
         name = request.form.get('name')
-        price = request.form.get('price')
+        price = Decimal(request.form.get('price'))
         caption = request.form.get('caption')
         restaurant_email = session.get('restaurant_email')
 
@@ -403,7 +404,7 @@ def menue():
 
 @views.route('/verwaltung', methods=['GET', 'POST'])
 def verwaltung():
-    restaurant_guthaben = session.get('restaurant_guthaben')
+    restaurant_guthaben = Decimal(session.get('restaurant_guthaben'))
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
 
@@ -570,7 +571,7 @@ def add_to_order():
     #Daten aus der Seite bestellungZusammenstellen holen
     item_name = request.form.get('item_name')
     quantity = int(request.form.get('quantity'))
-    price = float(request.form.get('item_price'))
+    price = Decimal(request.form.get('item_price'))
     user_email = session.get('user_email')  # Benutzer-Email aus Session
     restaurant_email = request.form.get("restaurant_email") # Restaurant-Email aus der Seite
     user_address = session.get('user_address')  # Lieferadresse
@@ -682,7 +683,7 @@ def remove_item_order():
 def order_comments():
     order_id = session.get('order_id')
     comments = request.form.get('comments')
-    user_guthaben = session.get('user_guthaben')
+    user_guthaben = Decimal(session.get('user_guthaben'))
 
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
@@ -748,7 +749,7 @@ def order_comments():
         connection.commit()
         connection.close()
 
-        session['user_guthaben'] -= total_price
+        session['user_guthaben'] = str(user_guthaben - total_price)
         session.pop('order_id', None)   #Damit bei der nächsten Bestellung eine neue Order_id erstellt wird
         flash('Bestellung erfolgreich abgeschickt!', 'success')
         return redirect(url_for('views.homeKunde'))

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT,
     city TEXT,
     zip TEXT,
-    guthaben REAL,
+    guthaben DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY(email)
     )
 ''')    #Guthaben später nochmal als numeric(10,2) testen
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS restaurants (
     zip TEXT,
     caption TEXT,
     bild TEXT,
-    guthaben REAL,
+    guthaben DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY(email)
     )
 ''')    #Guthaben später nochmal als numeric(10,2) testen
@@ -37,7 +37,7 @@ cursor.execute('''
 CREATE TABLE IF NOT EXISTS menue (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_name TEXT NOT NULL,
-    price REAL NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     restaurant_email TEXT,
     caption TEXT,
     FOREIGN KEY(restaurant_email) REFERENCES restaurants(email)
@@ -79,7 +79,7 @@ create table IF NOT EXISTS orders (
     user_email TEXT NOT NULL,
     restaurant_email TEXT NOT NULL,
     order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    total_price REAL NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
     delivery_address TEXT NOT NULL,
     delivery_plz TEXT NOT NULL,
     caption TEXT,
@@ -97,7 +97,7 @@ create table IF NOT EXISTS order_details (
     order_id INTEGER NOT NULL,
     item_name TEXT NOT NULL,
     quantity INTEGER NOT NULL,
-    price REAL,
+    price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (order_id)
 )
 ''')
