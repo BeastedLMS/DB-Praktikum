@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, Response, redirect, Blueprint, flash, url_for, session
 import sqlite3
 from decimal import Decimal, ROUND_HALF_UP
+from datetime import datetime
 
 views = Blueprint('views', __name__)
 
@@ -328,20 +329,52 @@ def reject_order(order_id):
 def homeKunde():
     user_zip = session.get('user_zip')
     user_guthaben = Decimal(session.get('user_guthaben'))
+
+    current_time = datetime.now().strftime("%H:%M").strip()
+    current_day = datetime.now().weekday()
+
+    day_of_week_names = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    current_day_name = day_of_week_names[current_day]  # Umwandlung der Zahl in den entsprechenden Wochentagsnamen
+
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
-                    SELECT DISTINCT restaurants.restaurant_name, restaurants.caption, restaurants.address, restaurants.city, restaurants.zip, restaurants.email
+                    SELECT DISTINCT restaurants.restaurant_name, restaurants.caption, restaurants.address, restaurants.city, 
+                                   restaurants.zip, restaurants.email, oeffnungszeiten.day_of_the_week, 
+                                   oeffnungszeiten.opening_time, oeffnungszeiten.closing_time
                     FROM restaurants
                     JOIN delivery_areas ON restaurants.email = delivery_areas.restaurant_email
+                    LEFT JOIN oeffnungszeiten ON restaurants.email = oeffnungszeiten.restaurant_email
                     WHERE delivery_areas.zip = ?
                     ''', (user_zip,))
     restaurantListe = cursor.fetchall()
     connection.close()
 
-    restaurants = [{"name": row[0], "beschreibung": row[1], "adresse": row[2], "stadt": row[3], "plz": row[4], "email": row[5]} for row in restaurantListe]
+    open_restaurants = []
 
-    return render_template("homeKunde.html", restaurants=restaurants, user_guthaben=user_guthaben)
+    for row in restaurantListe:
+        restaurant_data = {
+            "name": row[0],
+            "beschreibung": row[1],
+            "adresse": row[2],
+            "stadt": row[3],
+            "plz": row[4],
+            "email": row[5]
+        }
+
+        if row[6] == current_day_name:
+            print(f"Restaurant {restaurant_data['name']} is open today ({current_day_name})")
+            # Öffnungszeiten als Text (HH:MM)
+            opening_time = row[7].strip() if row[7] else ""
+            print(f"Restaurant {restaurant_data['name']} is open at {current_time}")
+            closing_time = row[8].strip() if row[8] else ""
+            print(f"Restaurant {restaurant_data['name']} is closed at {current_time}")
+
+            # Vergleiche die aktuelle Zeit mit den Öffnungszeiten
+            if opening_time <= current_time <= closing_time:
+                open_restaurants.append(restaurant_data)
+
+    return render_template("homeKunde.html", restaurants=open_restaurants, user_guthaben=user_guthaben)
 
 @views.route('/bestellungZusammenstellen', methods=['GET', 'POST'])
 def bestellungZusammenstellen():
