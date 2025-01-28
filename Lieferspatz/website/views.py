@@ -6,6 +6,17 @@ views = Blueprint('views', __name__)
 
 app = Flask(__name__)
 
+# Decimal-Konvertierung für SQLite
+def adapt_decimal(value):
+    return str(value)  # Decimal zu String für die Datenbank
+
+def convert_decimal(value):
+    return Decimal(value.decode())  # String aus der DB zu Decimal
+
+# Registrierung der Adapter und Konverter
+sqlite3.register_adapter(Decimal, adapt_decimal)
+sqlite3.register_converter("DECIMAL", convert_decimal)
+
 @views.route('/') #main page is just /
 def home():
     return render_template("home.html")
@@ -346,8 +357,10 @@ def bestellhistorie():
 def warenkorb():
     order_id = session.get('order_id')
     user_guthaben = Decimal(session.get('user_guthaben'))
-    connection = sqlite3.connect("database.db")
+
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
+
     cursor.execute('''
                     SELECT item_name, quantity, price
                     FROM order_details
@@ -356,14 +369,15 @@ def warenkorb():
     items = cursor.fetchall()
 
     cursor.execute('''
-                    SELECT total_price, caption
+                    SELECT total_price
                     FROM orders
                     WHERE order_id = ?
                     ''', (order_id,))
     order_details = cursor.fetchone()
+    total_price = Decimal(order_details[0]) if order_details else Decimal("0.00")
+
     connection.close()
-    comments = order_details[1] if order_details[1] else ""
-    return render_template("warenkorb.html", items=items, total_price=order_details[0], comments=comments, user_guthaben=user_guthaben)
+    return render_template("warenkorb.html", items=items, total_price=total_price, user_guthaben=user_guthaben)
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
@@ -374,7 +388,7 @@ def menue():
     if request.method == 'POST':
         item_id = request.form.get('item_id')
         name = request.form.get('name')
-        price = Decimal(request.form.get('price'))
+        price = (request.form.get('price'))
         caption = request.form.get('caption')
         restaurant_email = session.get('restaurant_email')
 
@@ -571,7 +585,7 @@ def add_to_order():
     #Daten aus der Seite bestellungZusammenstellen holen
     item_name = request.form.get('item_name')
     quantity = int(request.form.get('quantity'))
-    price = Decimal(request.form.get('item_price'))
+    price = (request.form.get('item_price'))
     user_email = session.get('user_email')  # Benutzer-Email aus Session
     restaurant_email = request.form.get("restaurant_email") # Restaurant-Email aus der Seite
     user_address = session.get('user_address')  # Lieferadresse
@@ -685,7 +699,7 @@ def order_comments():
     comments = request.form.get('comments')
     user_guthaben = Decimal(session.get('user_guthaben'))
 
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
 
     #BeÜberprüfen ob der Kunde genug Geld hat
@@ -694,7 +708,8 @@ def order_comments():
                      from orders
                      where order_id = ?
                      ''', (order_id,))
-    total_price = cursor.fetchone()[0]
+    order_details = cursor.fetchone()
+    total_price = Decimal(order_details[0]) 
 
     #Bei zu wenig Guthaben wird die Bestellung nicht abgeschickt
     if total_price > user_guthaben:
@@ -714,38 +729,14 @@ def order_comments():
                     SET status = 'in Bearbeitung' 
                     WHERE order_id = ?
                     ''', (order_id,))
-        
-        #Bezahlen und Geld aufteilen
-        lieferspatz_share = round(total_price * 0.15, 2)
-        restaurant_share = round(total_price * 0.85, 2)
-
-        # Sicherstellen das die Summe genau total_price ergibt
-        difference = total_price - (lieferspatz_share + restaurant_share)
-
-        # Falls durch Rundung ein Cent fehlt/zu viel bekommt dies das Restaurant
-        restaurant_share += difference
-
-        # Guthaben des Restaurants erhöhen
-        cursor.execute('''
-            UPDATE restaurants
-            SET guthaben = guthaben + ?
-            WHERE email = ?
-        ''', (restaurant_share, session.get('restaurant_email')))
-
+          
         # Guthaben des Kunden verringern
         cursor.execute('''
             UPDATE users
             SET guthaben = guthaben - ?
             WHERE email = ?
         ''', (total_price, session.get('user_email')))
-
-        # Guthaben von Lieferspatz erhöhen
-        cursor.execute('''
-            UPDATE restaurants
-            SET guthaben = guthaben + ?
-            WHERE email = 'lieferspatz@gmail.com'
-            ''', (lieferspatz_share,))
-
+     
         connection.commit()
         connection.close()
 
