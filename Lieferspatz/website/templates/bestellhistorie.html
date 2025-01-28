@@ -3,19 +3,19 @@
 {% block content %}
 <h1 class="mt-5">laufende Bestellungen</h1> 
 <div class="list-group">
-  {% for item in items %}
+  {% for item in new_items %}
     <a class="list-group-item list-group-item-action mb-3">
         <div class="card mb-3">
             <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
             <div class="card-body">
-              <h5 class="card-title mt-3">{{ item[3] }}</h5>
+              <h5 class="card-title mt-3">{{ item[1][0][3] }}</h5>
               <p class="card-text mt-2">
-                Bestellt am: {{ item[4] }}<br>
-                Status: {{ item[5] }}<br><br>
-                {% for food in items[1] %}
-                {{ food[3] }} {{ food[0] }} {{ food[1]*food[2] }}€<br>
+                Bestellt am: {{ item[1][0][4] }}<br>
+                Status: {{ item[1][0][5] }}<br><br>
+                {% for name, price, quantity, x, x, x, x in item[1] %}
+                {{ quantity }} {{ name }} {{ price*quantity }}€<br>
                 {% endfor %}
-                Gesamtpreis {{  item[6] }}€
+                Gesamtpreis {{  item[1][0][6] }}€
             </p>
             </div>
         </div>
@@ -25,19 +25,21 @@
 <h1 class="mt-3">vergangene Bestellungen</h1> 
 <div class="card-body mb-5">
     <div class="accordion accordion-flush" id="accordionFlushExample">
-      {% for order in old_orders %}
+      {% for item in old_items %}
       <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              {{ order[6]}}<br>
-              Bestelldatum: {{ order[2]}}<br>
-              Status: {{ order[3] }}
+              {{ item[1][0][3] }}<br>
+              Bestelldatum: {{ item[1][0][4] }}<br>
+              Status: {{ item[1][0][5] }}
             </button>
           </h2>
           <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
             <div class="accordion-body">
-              {{ order[4] }}   {{ order[5] }}€<br>
-                Gesamtpreis {{ order[5] }}€
+              {% for name, price, quantity, x, x, x, x in item[1] %}
+                {{ quantity }} {{ name }} {{ price*quantity }}€<br>
+                {% endfor %}
+                Gesamtpreis {{  item[1][0][6] }}€
             </div>
           </div>
         </div>

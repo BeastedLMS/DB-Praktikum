@@ -427,7 +427,7 @@ def bestellhistorie():
     ''', (user_email,))
     new_orders = cursor.fetchall()
     
-    grouped_orders = {}
+    groupByOrderID = {}
     for order in new_orders:
         order_id = order[0]
         item_name = order[4]
@@ -437,15 +437,12 @@ def bestellhistorie():
         datum = order[2]
         status = order[3]
         gesamtpreis = order[1]
-        if order_id not in grouped_orders:
-            grouped_orders[order_id] = []
-        grouped_orders[order_id].append((item_name, price, quantity, restaurant_name, datum, status, gesamtpreis))
+        if order_id not in groupByOrderID:
+            groupByOrderID[order_id] = []
+        groupByOrderID[order_id].append((item_name, price, quantity, restaurant_name, datum, status, gesamtpreis))
 
     # Konvertiere das Dictionary in eine Liste von Tupeln
-    items = [(order_id, items) for order_id, items in grouped_orders.items()]
-
-    print(items)
-
+    new_items = [(order_id, items) for order_id, items in groupByOrderID.items()]
     
     # alte Bestellungen anzeigen
     cursor.execute('''
@@ -458,7 +455,24 @@ def bestellhistorie():
     ''', (user_email,))
     old_orders = cursor.fetchall()
 
-    return render_template("bestellhistorie.html", new_orders=new_orders, old_orders=old_orders, user_guthaben=user_guthaben, items=items)
+    groupByOrderID = {}
+    for order in old_orders:
+        order_id = order[0]
+        item_name = order[4]
+        price = order[5]
+        quantity = order[7]
+        restaurant_name = order[6]
+        datum = order[2]
+        status = order[3]
+        gesamtpreis = order[1]
+        if order_id not in groupByOrderID:
+            groupByOrderID[order_id] = []
+        groupByOrderID[order_id].append((item_name, price, quantity, restaurant_name, datum, status, gesamtpreis))
+
+    # Konvertiere das Dictionary in eine Liste von Tupeln
+    old_items = [(order_id, items) for order_id, items in groupByOrderID.items()]
+
+    return render_template("bestellhistorie.html", old_items=old_items, user_guthaben=user_guthaben, new_items=new_items)
 
 @views.route('/warenkorb')
 def warenkorb():
