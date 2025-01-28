@@ -366,6 +366,7 @@ def warenkorb():
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
+    restaurant_guthaben = session.get('restaurant_guthaben')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
@@ -398,7 +399,7 @@ def menue():
 
     menu_items = [{"id": row[0], "name": row[1], "price": row[2], "caption": row[3]} for row in items]
 
-    return render_template("menue.html", items=menu_items)
+    return render_template("menue.html", items=menu_items, restaurant_guthaben=restaurant_guthaben)
 
 @views.route('/verwaltung', methods=['GET', 'POST'])
 def verwaltung():
