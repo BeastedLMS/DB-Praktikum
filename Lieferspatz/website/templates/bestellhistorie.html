@@ -59,35 +59,7 @@
         </div>
         {% endfor %}
 
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                Restaurantname<br>
-                Bestelldatum: 30.09.2024
-            </button>
-          </h2>
-          <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-                Pizza   7,50€<br>
-                Sushi-Set   15,50€<br>
-                Cheeseburger    9,00€</div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                Restaurantname<br>
-                Bestelldatum: 08.03.2024
-            </button>
-          </h2>
-          <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-                Pizza   7,50€<br>
-                Sushi-Set   15,50€<br>
-                Cheeseburger    9,00€
-            </div>
-          </div>
-        </div>
+        
         {% for restaurantname, items, preis, datum in vergangeneBestellungen %}
         <div class="accordion-item">
           <h2 class="accordion-header">
