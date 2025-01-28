@@ -315,20 +315,25 @@ def bestellhistorie():
 
     # neue Bestellungen anzeigen
     cursor.execute('''
-        SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, order_details.item_name, order_details.quantity, order_details.price
-        FROM orders
-        INNER JOIN order_details ON orders.order_id = order_details.order_id
-        WHERE (orders.status = 'in Bearbeitung' OR orders.status = 'in Zubereitung') AND user_email = ?;
+                   SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
+                    order_details.item_name, order_details.price, 
+                    restaurants.restaurant_name
+                        FROM orders
+                        INNER JOIN order_details ON orders.order_id = order_details.order_id
+                        INNER JOIN restaurants ON orders.restaurant_email = restaurants.email
+                        WHERE (orders.status = 'in Bearbeitung' OR orders.status = 'in Zubereitung') AND orders.user_email = ?;
     ''', (user_email,))
     new_orders = cursor.fetchall()
 
     
     # alte Bestellungen anzeigen
     cursor.execute('''
-        SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, order_details.item_name, order_details.quantity, order_details.price
-        FROM orders
-        INNER JOIN order_details ON orders.order_id = order_details.order_id
-        WHERE (orders.status = 'storniert' OR orders.status = 'abgeschlossen') AND user_email = ?;
+                   SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
+                    order_details.item_name, order_details.price, restaurants.restaurant_name
+                        FROM orders
+                        INNER JOIN order_details ON orders.order_id = order_details.order_id
+                        INNER JOIN restaurants ON orders.restaurant_email = restaurants.email
+                        WHERE (orders.status = 'abgeschlossen' OR orders.status = 'storniert') AND orders.user_email = ?;
     ''', (user_email,))
     old_orders = cursor.fetchall()
 

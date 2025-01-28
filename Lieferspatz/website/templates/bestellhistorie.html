@@ -8,12 +8,12 @@
         <div class="card mb-3">
             <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
             <div class="card-body">
-              <h5 class="card-title mt-3">Restaurantname</h5>
+              <h5 class="card-title mt-3">{{ order[6] }}</h5>
               <p class="card-text mt-2">
                 Bestellt am: {{ order[2] }}<br>
                 Status: {{ order[3] }}<br><br>
 
-                {{ order[4] }}   {{ order[6] }}€<br>
+                {{ order[4] }}   {{ order[5] }}€<br>
             </p>
             </div>
         </div>
@@ -41,22 +41,24 @@
 <h1 class="mt-3">vergangene Bestellungen</h1> 
 <div class="card-body mb-5">
     <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
+      {% for order in old_orders %}
+      <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              Restaurantname<br>
-              Bestelldatum: 12.11.2024
+              {{ order[6]}}<br>
+              Bestelldatum: {{ order[2]}}<br>
+              Status: {{ order[3] }}
             </button>
           </h2>
           <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
             <div class="accordion-body">
-                Pizza   7,50€<br>
-                Sushi-Set   15,50€<br>
-                Cheeseburger  9,00€<br>
-                Gesamtpreis 0€
+              {{ order[4] }}   {{ order[5] }}€<br>
+                Gesamtpreis {{ order[5] }}€
             </div>
           </div>
         </div>
+        {% endfor %}
+
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
