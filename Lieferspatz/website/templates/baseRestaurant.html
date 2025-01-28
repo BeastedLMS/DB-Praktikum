@@ -69,6 +69,11 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li class="nav-item">
+                <!-- Guthaben des Restaurants auf 2 Nachkommastellen gerundet -->
+                <span class="nav-link">Guthaben: {{ "%.2f"|format(restaurant_guthaben) }} €</span>
+              </li>
+              <br>
+              <li class="nav-item">
                 <a
                   class="nav-link active"
                   aria-current="page"

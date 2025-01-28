@@ -186,7 +186,8 @@ def signupGeschaeft():
 def homeRestaurant():     
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
-    restaurant_emai = session.get('restaurant_email')
+    restaurant_email = session.get('restaurant_email')
+    restaurant_guthaben = session.get('restaurant_guthaben')
 
     # # Testdaten für Bestellungen
     # cursor.execute('''
@@ -203,7 +204,7 @@ def homeRestaurant():
         SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
         WHERE (status = 'in Bearbeitung' OR status = 'in Zubereitung') AND restaurant_email = ?
-    ''', (restaurant_emai,))
+    ''', (restaurant_email,))
     new_orders = cursor.fetchall()
 
     # alte Bestellungen aus der Datenbank holen
@@ -211,14 +212,14 @@ def homeRestaurant():
         SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
         WHERE (status = 'abgeschlossen' OR status = 'storniert') AND restaurant_email = ?
-    ''', (restaurant_emai,))
+    ''', (restaurant_email,))
 
     
 
     old_orders = cursor.fetchall()
 
     connection.close()                              
-    return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders)
+    return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders, restaurant_guthaben=restaurant_guthaben)
 
 
 @views.route('/accept_order/<int:order_id>', methods=['POST'])
