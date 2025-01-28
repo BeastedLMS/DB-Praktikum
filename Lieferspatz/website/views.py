@@ -186,6 +186,7 @@ def signupGeschaeft():
 def homeRestaurant():     
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
+    restaurant_emai = session.get('restaurant_email')
 
     # # Testdaten für Bestellungen
     # cursor.execute('''
@@ -201,16 +202,16 @@ def homeRestaurant():
     cursor.execute('''
         SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
-        WHERE status = 'in Bearbeitung' OR status = 'in Zubereitung'
-    ''')
+        WHERE (status = 'in Bearbeitung' OR status = 'in Zubereitung') AND restaurant_email = ?
+    ''', (restaurant_emai,))
     new_orders = cursor.fetchall()
 
     # alte Bestellungen aus der Datenbank holen
     cursor.execute('''
         SELECT order_id, total_price, delivery_address, order_date, status
         FROM orders
-        WHERE status = 'abgeschlossen' OR status = 'storniert'
-    ''')
+        WHERE (status = 'abgeschlossen' OR status = 'storniert') AND restaurant_email = ?
+    ''', (restaurant_emai,))
 
     
 
