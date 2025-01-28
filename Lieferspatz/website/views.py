@@ -396,8 +396,7 @@ def bestellhistorie():
     # neue Bestellungen anzeigen
     cursor.execute('''
                    SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
-                    order_details.item_name, order_details.price, 
-                    restaurants.restaurant_name
+                    order_details.item_name, order_details.price, restaurants.restaurant_name, order_details.quantity
                         FROM orders
                         INNER JOIN order_details ON orders.order_id = order_details.order_id
                         INNER JOIN restaurants ON orders.restaurant_email = restaurants.email
@@ -409,7 +408,7 @@ def bestellhistorie():
     # alte Bestellungen anzeigen
     cursor.execute('''
                    SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
-                    order_details.item_name, order_details.price, restaurants.restaurant_name
+                    order_details.item_name, order_details.price, restaurants.restaurant_name, order_details.quantity
                         FROM orders
                         INNER JOIN order_details ON orders.order_id = order_details.order_id
                         INNER JOIN restaurants ON orders.restaurant_email = restaurants.email
