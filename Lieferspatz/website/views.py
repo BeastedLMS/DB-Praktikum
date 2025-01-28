@@ -419,7 +419,7 @@ def bestellhistorie():
     cursor.execute('''
                    SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
                     order_details.item_name, order_details.price, 
-                    restaurants.restaurant_name
+                    restaurants.restaurant_name, order_details.quantity
                         FROM orders
                         INNER JOIN order_details ON orders.order_id = order_details.order_id
                         INNER JOIN restaurants ON orders.restaurant_email = restaurants.email
@@ -432,10 +432,14 @@ def bestellhistorie():
         order_id = order[0]
         item_name = order[4]
         price = order[5]
-        quantity = ord[7]
+        quantity = order[7]
+        restaurant_name = order[6]
+        datum = order[2]
+        status = order[3]
+        gesamtpreis = order[1]
         if order_id not in grouped_orders:
             grouped_orders[order_id] = []
-        grouped_orders[order_id].append((item_name, price, quantity))
+        grouped_orders[order_id].append((item_name, price, quantity, restaurant_name, datum, status, gesamtpreis))
 
     # Konvertiere das Dictionary in eine Liste von Tupeln
     items = [(order_id, items) for order_id, items in grouped_orders.items()]
@@ -446,7 +450,7 @@ def bestellhistorie():
     # alte Bestellungen anzeigen
     cursor.execute('''
                    SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
-                    order_details.item_name, order_details.price, restaurants.restaurant_name
+                    order_details.item_name, order_details.price, restaurants.restaurant_name, order_details.quantity
                         FROM orders
                         INNER JOIN order_details ON orders.order_id = order_details.order_id
                         INNER JOIN restaurants ON orders.restaurant_email = restaurants.email

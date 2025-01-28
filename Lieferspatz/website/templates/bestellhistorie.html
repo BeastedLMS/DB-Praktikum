@@ -8,14 +8,14 @@
         <div class="card mb-3">
             <img src="https://sushifreunde.de/bilder/2022-01-sf-futo-maki-newspost-2000x1296-1.jpg" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
             <div class="card-body">
-              <h5 class="card-title mt-3">{{ order[6] }}</h5>
+              <h5 class="card-title mt-3">{{ item[3] }}</h5>
               <p class="card-text mt-2">
-                Bestellt am: {{ order[2] }}<br>
-                Status: {{ order[3] }}<br><br>
-                {% for item in items[1] %}
-                {{ item[3] }} {{ item[0] }} {{ item[1]*item[2] }}€<br>
+                Bestellt am: {{ item[4] }}<br>
+                Status: {{ item[5] }}<br><br>
+                {% for food in items[1] %}
+                {{ food[3] }} {{ food[0] }} {{ food[1]*food[2] }}€<br>
                 {% endfor %}
-                Gesamtpreis {{ order [1] }}€
+                Gesamtpreis {{  item[6] }}€
             </p>
             </div>
         </div>
