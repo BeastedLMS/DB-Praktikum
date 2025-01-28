@@ -250,6 +250,7 @@ def reject_order(order_id):
 @views.route('/homeKunde')
 def homeKunde():
     user_zip = session.get('user_zip')
+    user_guthaben = session.get('user_guthaben')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -263,7 +264,7 @@ def homeKunde():
 
     restaurants = [{"name": row[0], "beschreibung": row[1], "adresse": row[2], "stadt": row[3], "plz": row[4], "email": row[5]} for row in restaurantListe]
 
-    return render_template("homeKunde.html", restaurants=restaurants)
+    return render_template("homeKunde.html", restaurants=restaurants, user_guthaben=user_guthaben)
 
 @views.route('/bestellungZusammenstellen', methods=['GET', 'POST'])
 def bestellungZusammenstellen():
@@ -342,6 +343,7 @@ def bestellhistorie():
 @views.route('/warenkorb')
 def warenkorb():
     order_id = session.get('order_id')
+    user_guthaben = session.get('user_guthaben')
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -359,7 +361,7 @@ def warenkorb():
     order_details = cursor.fetchone()
     connection.close()
     comments = order_details[1] if order_details[1] else ""
-    return render_template("warenkorb.html", items=items, total_price=order_details[0], comments=comments)
+    return render_template("warenkorb.html", items=items, total_price=order_details[0], comments=comments, user_guthaben=user_guthaben)
 
 @views.route('/menue', methods=['GET', 'POST'])
 def menue():
