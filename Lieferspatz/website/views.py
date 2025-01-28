@@ -196,7 +196,7 @@ def signupGeschaeft():
 
 @views.route('/homeRestaurant')
 def homeRestaurant():     
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
     restaurant_email = session.get('restaurant_email')
     restaurant_guthaben = Decimal(session.get('restaurant_guthaben'))
@@ -213,7 +213,7 @@ def homeRestaurant():
 
     # neue Bestellunguen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, total_price, delivery_address, order_date, status
+        SELECT order_id, total_price, delivery_address, order_date, status, user_email
         FROM orders
         WHERE (status = 'in Bearbeitung' OR status = 'in Zubereitung') AND restaurant_email = ?
     ''', (restaurant_email,))
@@ -221,7 +221,7 @@ def homeRestaurant():
 
     # alte Bestellungen aus der Datenbank holen
     cursor.execute('''
-        SELECT order_id, total_price, delivery_address, order_date, status
+        SELECT order_id, total_price, delivery_address, order_date, status, user_email
         FROM orders
         WHERE (status = 'abgeschlossen' OR status = 'storniert') AND restaurant_email = ?
     ''', (restaurant_email,))
@@ -236,7 +236,7 @@ def homeRestaurant():
 
 @views.route('/accept_order/<int:order_id>', methods=['POST'])
 def accept_order(order_id):
-    connection = sqlite3.connect("database.db")
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
     cursor.execute('''
         UPDATE orders 
@@ -244,11 +244,54 @@ def accept_order(order_id):
         WHERE order_id = ?
         ''', ('in Zubereitung', order_id))
     connection.commit()
+
+    #Gesamtpreis der Bestellung holen
+    cursor.execute('''
+                   select total_price
+                     from orders
+                     where order_id = ?
+                     ''', (order_id,))
+    order_details = cursor.fetchone()
+    total_price = Decimal(order_details[0])
+
+    #Bezahlen und Geld aufteilen
+    lieferspatz_share = total_price * Decimal('0.15')
+    restaurant_share = total_price * Decimal('0.85')
+
+    lieferspatz_share = lieferspatz_share.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    restaurant_share = restaurant_share.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
+    # Guthaben des Restaurants erhöhen
+    cursor.execute('''
+            UPDATE restaurants
+            SET guthaben = guthaben + ?
+            WHERE email = ?
+            ''', (restaurant_share, session.get('restaurant_email')))
+
+    # Guthaben von Lieferspatz erhöhen
+    cursor.execute('''
+            UPDATE restaurants
+            SET guthaben = guthaben + ?
+            WHERE email = 'Lieferspatz@gmail.com'
+            ''', (lieferspatz_share,))
+    
+    session['restaurant_guthaben'] = str(Decimal(session.get('restaurant_guthaben')) + restaurant_share)
+    connection.commit()
     connection.close()
     return redirect(url_for('views.homeRestaurant'))
 
 @views.route('/reject_order/<int:order_id>', methods=['POST'])
 def reject_order(order_id):
+    
+    total_price = request.form.get('total_price')
+    user_email = request.form.get('user_email')
+
+    # Umwandlung von total_price in Decimal
+    total_price_decimal = Decimal(total_price)
+        
+    # Sicherstellen, dass der Preis auf zwei Dezimalstellen gerundet wird
+    total_price_decimal = total_price_decimal.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -257,6 +300,13 @@ def reject_order(order_id):
         WHERE order_id = ?
         ''', ('storniert', order_id))
     connection.commit()
+
+    cursor.execute('''
+            UPDATE users
+            SET guthaben = guthaben + ?
+            WHERE email = ?
+            ''', (total_price_decimal, user_email))
+
     connection.close()
     return redirect(url_for('views.homeRestaurant'))
 
@@ -585,11 +635,14 @@ def add_to_order():
     #Daten aus der Seite bestellungZusammenstellen holen
     item_name = request.form.get('item_name')
     quantity = int(request.form.get('quantity'))
-    price = (request.form.get('item_price'))
+    price = request.form.get('item_price')
     user_email = session.get('user_email')  # Benutzer-Email aus Session
     restaurant_email = request.form.get("restaurant_email") # Restaurant-Email aus der Seite
     user_address = session.get('user_address')  # Lieferadresse
     user_plz = session.get('user_zip')  # Liefer-PLZ
+
+    # Umwandlung von String in Decimal
+    price_decimal = Decimal(price)  
 
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
@@ -632,12 +685,15 @@ def add_to_order():
         ''', (order_id, item_name, quantity, price))
     connection.commit()
 
+    # Berechnung des Gesamtpreises
+    total_item_price = price_decimal * quantity
+
     #Gesamtpreis der Bestellung aktualisieren
     cursor.execute('''
                    UPDATE orders
                      SET total_price = total_price + ?
                      WHERE order_id = ?
-                     ''', (price * quantity, order_id))
+                     ''', (total_item_price, order_id))
     connection.commit()
     connection.close()
 
@@ -649,7 +705,7 @@ def remove_item_order():
     remove_count = int(request.form.get("remove_count"))  # Menge
     order_id = session.get('order_id')  # Bestellungs-ID
 
-    connection = sqlite3.connect("database.db")
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
 
     #Menge des Items holen
@@ -664,13 +720,18 @@ def remove_item_order():
     if item_details:
         current_quantity = item_details[0]
         new_quantity = current_quantity - remove_count
+        price_decimal = Decimal(item_details[1]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
         if new_quantity > 0:
+
+            total_price_to_subtract = price_decimal * remove_count
+            total_price_to_subtract = total_price_to_subtract.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
             cursor.execute('''
                     UPDATE orders
                     SET total_price = total_price - ?
                     WHERE order_id = ?
-                    ''', (item_details[1] * remove_count, order_id))
+                    ''', (total_price_to_subtract, order_id))
             
             cursor.execute('''
                         UPDATE order_details
@@ -679,11 +740,15 @@ def remove_item_order():
                         ''', (remove_count, order_id, item_name))
 
         else:
+
+            total_price_to_subtract = price_decimal * current_quantity
+            total_price_to_subtract = total_price_to_subtract.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
             cursor.execute('''
                     UPDATE orders
                     SET total_price = total_price - ?
                     WHERE order_id = ?
-                    ''', (item_details[0] * item_details[1], order_id))
+                    ''', (total_price_to_subtract, order_id))
             cursor.execute('''
                         DELETE FROM order_details
                         WHERE order_id = ? AND item_name = ?

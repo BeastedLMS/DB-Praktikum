@@ -53,9 +53,12 @@ content %}
               {% if order[4] == 'in Bearbeitung'%}
               <div>
               <form action="/accept_order/{{ order[0] }}" method="POST" style="display:inline;">
+                <input type="hidden" name="total_price" value="{{ order[1] }}"></type>
                 <button class="btn btn-primary" type="submit">Annehmen</button>
             </form>
             <form action="/reject_order/{{ order[0] }}" method="POST" style="display:inline;">
+              <input type="hidden" name="total_price" value="{{ order[1] }}"></type>
+              <input type="hidden" name="user_email" value="{{ order[5] }}"></type>
               <button class="btn btn-danger " type="submit">Ablehnen</button>
           </form>
           </div>
