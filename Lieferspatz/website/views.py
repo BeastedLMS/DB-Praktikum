@@ -221,7 +221,7 @@ def homeRestaurant():
     connection.close()                              
     return render_template('homeRestaurant.html', new_orders=new_orders, old_orders=old_orders, restaurant_guthaben=restaurant_guthaben)
 
-
+# Benachrichtigung
 @views.route('/check_new_orders')
 def check_new_orders():
     connection = sqlite3.connect("database.db")
