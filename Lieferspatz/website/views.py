@@ -216,9 +216,6 @@ def homeRestaurant():
         FROM orders
         WHERE (status = 'abgeschlossen' OR status = 'storniert') AND restaurant_email = ?
     ''', (restaurant_email,))
-
-    
-
     old_orders = cursor.fetchall()
 
     connection.close()                              
@@ -242,7 +239,6 @@ def check_new_orders():
     connection.close()
 
     return jsonify({'new_orders': new_orders_count})
-
 
 
 @views.route('/send_order/<int:order_id>', methods=['POST'])
@@ -408,7 +404,6 @@ def bestellhistorie():
     connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
     
-
     # neue Bestellungen anzeigen
     cursor.execute('''
                    SELECT orders.order_id, orders.total_price, orders.order_date, orders.status, 
@@ -421,6 +416,7 @@ def bestellhistorie():
     ''', (user_email,))
     new_orders = cursor.fetchall()
     
+    # Bestellungen nach order_id auflisten
     groupByOrderID = {}
     for order in new_orders:
         order_id = order[0]
@@ -449,6 +445,8 @@ def bestellhistorie():
     ''', (user_email,))
     old_orders = cursor.fetchall()
 
+
+    # Bestellungen nach order_id auflisten
     groupByOrderID = {}
     for order in old_orders:
         order_id = order[0]
