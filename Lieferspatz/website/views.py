@@ -87,7 +87,7 @@ def login():
         connection.close()
         flash('Ungültige E-Mail oder Passwort. Bitte versuche es erneut.', 'error')
 
-    return render_template("login.html", text="Testing", user="Name", boolean=True)
+    return render_template("login.html")
 
 #Um sessiondaten des Users zu löschen und auf die Startseite zu leiten
 
@@ -201,16 +201,6 @@ def homeRestaurant():
     cursor = connection.cursor()
     restaurant_email = session.get('restaurant_email')
     restaurant_guthaben = Decimal(session.get('restaurant_guthaben'))
-
-    # # Testdaten für Bestellungen
-    # cursor.execute('''
-    #     INSERT INTO orders (restaurant_email, items, total_price, delivery_address, date, time, status)
-    #     VALUES 
-    #     ('admin@1', 'Pizza, Cola', 20.50, 'Musterstraße 123, Musterstadt', '2025-01-25', '18:30', 'in Bearbeitung'),
-    #     ('admin@1', 'Burger, Pommes', 15.00, 'Beispielstraße 45, Teststadt', '2025-01-20', '17:00', 'old')
-    # ''')
-    # connection.commit()
-
 
     # neue Bestellunguen aus der Datenbank holen
     cursor.execute('''
@@ -327,6 +317,7 @@ def reject_order(order_id):
     # Sicherstellen, dass der Preis auf zwei Dezimalstellen gerundet wird
     total_price_decimal = total_price_decimal.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
+    # Bestellung stornieren 
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute('''
@@ -336,6 +327,7 @@ def reject_order(order_id):
         ''', ('storniert', order_id))
     connection.commit()
 
+    # Geld rückerstatten
     cursor.execute('''
             UPDATE users
             SET guthaben = guthaben + ?
@@ -352,6 +344,8 @@ def homeKunde():
     user_guthaben = Decimal(session.get('user_guthaben'))
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
+
+    # Restaurants, die geöffnet sind anzeigen
     cursor.execute('''
                     SELECT DISTINCT restaurants.restaurant_name, restaurants.caption, restaurants.address, restaurants.city, restaurants.zip, restaurants.email
                     FROM restaurants
@@ -849,7 +843,7 @@ def order_comments():
 
     #Bei zu wenig Guthaben wird die Bestellung nicht abgeschickt
     if total_price > user_guthaben:
-        flash('Nicht genug Guthaben!', 'danger')
+        flash('Nicht genug Guthaben!', 'error')
         connection.close()
         return redirect(url_for('views.warenkorb'))
     

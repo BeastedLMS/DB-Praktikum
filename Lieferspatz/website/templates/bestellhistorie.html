@@ -44,25 +44,6 @@
           </div>
         </div>
         {% endfor %}
-
-        
-        {% for restaurantname, items, preis, datum in vergangeneBestellungen %}
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                {{restaurantname}}<br>
-                {{"Bestelldatum: " + datum}}
-            </button>
-          </h2>
-          <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-                {% for item in items %}
-                {{item + "  " + preis + "€\n"}}
-                {% endfor %}
-            </div>
-          </div>
-        </div>
-        {% endfor %}
       </div>
 </div>
 {% endblock %}
