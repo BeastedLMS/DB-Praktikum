@@ -411,7 +411,7 @@ def bestellungZusammenstellen():
 def bestellhistorie():
     user_guthaben = Decimal(session.get('user_guthaben'))
     user_email = session.get('user_email')
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
     cursor = connection.cursor()
     
 
